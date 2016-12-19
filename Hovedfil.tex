@@ -1,0 +1,655 @@
+\documentclass[12pt]{report}
+
+%Formattering
+
+%Font og sprog
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage{caption}
+
+%Page layout
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm, twoside]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{bm}
+\usepackage{fancyhdr} %Header og footer, på alle normale sider
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[L]{\rightmark }
+\fancyfoot{}
+\fancyfoot[R]{\bfseries \thepage}
+\fancyfoot[L]{\leftmark}
+\renewcommand{\footrulewidth}{1pt}
+\renewcommand{\chaptername}{Spørgsmål}
+\usepackage{pgf,tikz}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+
+\usepackage[toc,page]{appendix}
+
+
+%Diverse brugbare pakker
+
+\usepackage{comment}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{framed}
+\usepackage{etoolbox}
+\usepackage{enumitem}
+\usepackage[framed,amsmath,thmmarks]{ntheorem}
+%Diverse Envirronments
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{theorem}[lemma]{Sætning}
+\newtheorem{remark}[lemma]{Remark} 
+\newtheorem{definition}[lemma]{Definition}
+\theoremheaderfont{\normalfont\bfseries}
+\theorembodyfont{\normalfont}
+\theoremstyle{break}
+\def\theoremframecommand{\colorbox[rgb]{1,.9,.9}}
+\newshadedtheorem{eksempel}[lemma]{Eksempel}
+\newenvironment{eks}[1]{%
+		\begin{eksempel}[#1]
+}{%
+		\end{eksempel}
+}
+\newtheorem*{proof}{Bevis}
+\newenvironment{pro}{\begin{bevis}}{\end{bevis}}
+\AtEndEnvironment{proof}{$\null\hfill\blacksquare$}
+\theoremstyle{break}
+\newenvironment{AMS}{}{}
+\newenvironment{keywords}{}{}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bparam}{{\bm{\theta}}}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bZ}{\mathbf{Z}}
+\newcommand{\bparammax}{\widehat{\bparam}\left(\by\right)}
+\newcommand{\bParammax}{\widehat{\bparam}\left(\bY\right)}
+\newcommand{\like}{L\left(\by,\bparam\right)}
+\newcommand{\E}[1]{\mathrm{E}\left[#1\right]}
+\newcommand{\Var}[1]{\mathrm{Var}\left[#1\right]}
+\newcommand{\Int}[1]{\int#1\,d\mu}
+\newcommand{\Pois}{\text{Pois}}
+\newcommand{\hatB}{\widehat{\bm{\beta}}}
+\newcommand{\bmu}{\bm{\mu}}
+\newcommand{\bbeta}{\bm{\beta}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\ts}{\tilde{\sigma}}
+\newcommand{\FS}{\mathcal{S}}
+\newcommand{\tps}{T_p\FS}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\W}{\mathcal{W}}
+\newcommand{\FI}{\mathcal{F}}
+\newcommand{\FII}{\mathcal{F}_{II}}
+\newcommand{\M}{\mathcal{M}^+}
+\renewcommand{\L}{\mathcal{L}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\D}{\mathbb{D}}
+\newcommand{\GI}{\Gamma_{11}}
+\newcommand{\GII}{\Gamma_{12}}
+\newcommand{\GIII}{\Gamma_{22}}
+\newcommand{\laengde}[1]{\lvert|#1\rvert|}
+\DeclareMathOperator{\tr}{trace}
+\DeclareMathOperator{\inte}{int}
+\DeclareMathOperator{\spa}{span}
+
+\title{Dispositioner til mål- og integrationsteori}
+\author{Mikkel Findinge}
+\setcounter{chapter}{1}
+\begin{document}
+\maketitle
+\definecolor{qqqqff}{rgb}{0.,0.,1.}
+\definecolor{zzttqq}{rgb}{0.6,0.2,0.}
+\section*{Notation og begrebsliste}
+\renewcommand{\arraystretch}{3}
+\begin{tabular}{p{0.3\linewidth}p{0.7\linewidth}}
+Simpel funktion & Antager endeligt mange funktionsværdier.
+\\
+$\M=\M(X,\EE)$ & Mængden af $\EE$-målelige funktioner $f\colon X\to[0,\infty[$.
+\\
+Definition af $\int f\, d_\mu$ & $\sup\{\int s\, d\mu| s\in\M$, s simpel, $s\leq f\}$.
+\\
+$g$ er majorant for $\{f_n\}$ & $g\in\M(X,\EE),$ $\int g\, d\mu<\infty$, hvor $\lvert f_n\rvert\leq g, \forall n$.
+\\
+$f$ er $\mu-$integrabel & $f\colon X\to\RR, \EE-$målelig, $\int f^+\, d\mu<\infty$ og $\int f^-\, d\mu<\infty$.
+\\
+$\L(X,\EE,\mu)$ & Mængden af $\mu$-integrable funktioner.
+\\
+Fatous Lemma & $\{f_n\}\in\M\Rightarrow\int\left(\liminf\limits_nf_n\, d\mu\leq\right)\liminf\limits_n\int f_n\, d\mu.$
+\\
+$\K$ er fællesmængdestabilt & $A,B\in\K\Rightarrow A\cap B\in\K$.
+\\
+$\D(\K)$ & Den mindste $\sigma$-klasse, der indeholder $\K$.
+\\
+$\sigma(\K)$ & Den mindste $\sigma$-algebra, der indeholder $\K$.
+\\
+Frembringersystem & $\K$ er frembringersystem for $\EE$, hvis $\E = \sigma(\K)$.
+\\
+$(X,\EE,\mu)$ er $\sigma$-endelig & $X = \bigcup_{n = 1}^\infty  {A_n}$, hvor $A_n\in\EE$ med $\mu(A_n)<\infty$.
+\\
+$\L_p$ - p-dobbelt integrabel mht. $\mu$ & $\Int{|f|^p}<\infty$, hvor $f$ er $\EE$-målelig.
+\\
+$\laengde{f}_p$ & $\left(\Int{|f|^p}\right)^{1/p}$.
+\\
+$L_p(X,\EE,\mu)$ & Vektorrum, hvor $f\sim g\Leftrightarrow\laengde{f-g}_p=0$.
+\end{tabular}
+
+
+\newpage
+\addtocounter{chapter}{1}
+\section*{1. Monotonisætningen.}
+\begin{theorem}
+For enhver ikke-aftagende følge $f_1\leq f_2\leq\ldots$ af funktioner fra $\M$ gælder
+\[\int(\lim f_n)d\mu = \lim\int f_n d\mu.\]
+\end{theorem}
+\begin{proof}
+Bemærk først, at $f=\lim_nf_n =\sup_nf_n\in\M$, samt at $(\int f_n\, d\mu)_ {n=1,2\ldots}$ er stigende, så begge sider i ligningen har mening.
+
+\bigskip
+
+Da $f\geq f_n, \forall n\in\mathbb{N}$, er det klart, at 
+\[\int f\, d\mu\geq\lim\limits_{n}\int f_n\, d\mu.\]
+Den anden ulighed skal derfor blot vises. Ifølge definitionen af $\int f\, d\mu$ (se s. 1) kommer det ud på at vise, at 
+\[\int s\, d\mu\leq\lim\limits_{n}\int f_n\, d\mu,\]
+for en simpel, $\EE$-målelig funktion $s\colon X\to [0,\infty[$, hvor $s\leq f$. - Det vil være nok for et vilkårligt $a\in]0,1[$ at vise
+\[a\int s\, d\mu = \int as\, d\mu\leq\lim\limits_{n}\int f_n\, d\mu.\]
+Vi har, da $\forall x\in X$, hvor $0<f(x)$, så er $as(x)<f(x)=\lim_nf_n(x),$ og dermed $\exists n\in\mathbb{N}\colon as(x)<f_n(x)$. For $f(x)=0$, er $0=s(x)=f_1(x)=f_2(x)=\ldots$.
+
+\bigskip
+
+Sætter vi $E_n = \left\{ x \in X|as(x) \leqslant f_n(x) \right\},n = 1,2, \ldots,$ må $E_n$ for $n$ stort nok opfylde, at
+\[\bigcup\limits_{n = 1}^\infty  {{E_n}}  = X.\]
+Da $s$ og $f_n$ er $\EE$-målelige funktioner, tilhører $E_1\subseteq E_2\subset\ldots$ sigma-algebraen $\EE$ (Eksempel 2.15 i bog).
+
+\bigskip
+
+Definér afbildningen $E\mapsto\nu(E)=\int as1_E\, d\mu$. Vi kan sætte $s = \sum\nolimits_{i = 1}^n {{a_i}{1_{{A_i}}}}$, da $s$ er simpel. Da integralet af en sum af funktioner kan splittes op i flere integraler, samt konstanter kan tages uden for integraler fås
+\[\nu (E) = \int {\sum\limits_{i = 1}^n {a{a_i}{1_{{A_i}}}} } d\mu  = \sum\limits_{i = 1}^n {a{a_i}\mu ({A_i} \cap E)}, \]
+hvilket er et mål jvf. eksemplerne 3.2C og 3.2D. En egenskab for mål er, at $\mu(E_n)\nearrow\mu\left(\cup^{\infty}_{n=1}E_n\right)$, når $E_1\subseteq E_2\subset\ldots$, og dermed fås
+\[\nu (E) = \int {as\cdot{1_{{E_n}}}} d\mu  \nearrow \nu (X) = \int {as\cdot{1_X}} d\mu  = \int {as} \,d\mu. \]
+Da $as\cdot 1_{E_n}\leq f_n$ og dermed $\int as\cdot 1_{E_n}\, d\mu\leq\int f_n\, d\mu$ følger det ønskede
+\[\int as\, d\mu = \lim\limits_{n}\int as\cdot 1_{E_n}\, d\mu\leq\lim\limits_{n}\int f_n\, d\mu.\]
+\end{proof}
+\newpage
+\addtocounter{chapter}{1}
+\section*{2. Lebesgueintegral og integrabilitet.}
+Beviser kun eksistens af målet.
+\begin{theorem}
+Der findes en afbildning $I_\mu\in\M(X,\EE)$ givet ved
+\[I_\mu(s)=\Int{s}=\sum_{i=1}^{n}a_i\mu(A_i)\] for en simpel funktion $s$ med følgende egenskaber:
+\begin{enumerate}
+\item $I_\mu(1_E)=\mu(E)$ for $E\in\EE$.
+\item $I_\mu(f+g)=I_\mu(f)+I_\mu(g)$ for $f,g\in\M$.
+\item $\lim_{n\to\infty}I_\mu(f_n)=I_\mu(f)$ når $(f_n)\in\M$ er en følge så $f_n\nearrow f$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+Bevis først de to lemma'er herunder.
+
+\bigskip
+
+Definéres for et vilkårligt $f\in\M$
+\[\tilde{I}=\sup\left\{\Int{s}\vert s\in\M, s\text{ simpel},s\leq f\right\}\in[0,\infty].\]
+Hvis $f\in\M$ selv er simpel indgår den i ovenstående, altså er $\tilde{I}(f)\geq\Int{f}$. Lemma 4 giver dog, at $\Int{f}\geq\Int{s}$, hvormed  $\tilde{I}(f)\leq \Int{f}$, og dermed er $\tilde{I}(f)=\Int{f} = I_\mu$. Altså har det mening at definere $I_\mu(f)=\Int{f}$ ved ovenstående for alle $f\in\M$.
+
+\bigskip
+
+Vi skal nu vise, at $I_\mu$ opfylder (1)-(3). (1) er en umiddelbar konsekvens af definitionen. (3) har sit eget eksamensspørgsmål, så det gennemgås ikke, men antages sandt. 
+
+\bigskip
+
+Vi kan finde følger $(s_n)$ og $(t_n)$ af simple funktioner fra $\M$, så $s_n\nearrow f$ og $t_n\nearrow g$, da $s_n+t_n\nearrow f+g$ giver (3) og Lemma 3, at
+\begin{align*}
+\Int{f+g}&=\lim\Int{s_n+t_n}=\lim\left(\Int{s_n}+\Int{t_n}\right) \\ & = \lim\Int{s_n}+\lim\Int{t_n}=\Int{f}+\Int{g}.
+\end{align*}
+\end{proof}
+\begin{lemma}
+For simple $\EE$-målelige funktioner $s,t\colon X\to[0,\infty[$ er $s+t$ $\EE$-målelig og \[\Int{s+t}=\Int{s}+\Int{t}.\]
+\end{lemma}
+\begin{proof}
+Hvis $X=\bigcup_1^pC_h$, hvor $C_1,\ldots,C_p\in\EE$ er parvis disjunkte, og hvis $c_1,\ldots,c_p\in[0,\infty[$, da er
+\[\Int{\sum_{h=1}^pc_h1_{C_h}} = \sum_{h=1}^pc_h\mu{C_h}.\]
+Udelades tomme $C_h$, og erstattes led $c_{h_1}\mu(C_{h_1}),\ldots,c_{h_k}\mu(C_{h_k})$ på højre side med
+\[c_{h_1}\sum_{i=1}^{k}\mu(c_{h_i})=c_{h_1}\mu(\bigcup_{i=1}^kC_{h_i}),\]
+når $c_{h_1}=\ldots=c_{h_k}$, kommer vi tilbage til definitionen af \[\Int{\sum_{h=1}^pc_h1_{C_h}}.\]
+
+\bigskip
+
+Er $a_1,\ldots,a_m$ og $b_1,\ldots,b_m$ forskellige funktionsværdier for henholdsvis $s$ og $t$, og sættes $A_i = s^{-1}(\{a_i\}), i=1,\ldots,m$ og $B_j = t^{-1}(\{b_j\}), j=1,\ldots,n$, har vi
+\[X = X\cap X = \left(\bigcup_{i=1}^m A_i\right)\cap\left(\bigcup_{j=1}^n B_j\right) = \bigcup_{i,j} (A_i\cap B_j),\]
+hvor de $mn$ mængder $A_i\cap B_j\in\EE$ er parvis disjunkte. Da nu
+\[s=\sum_{i,j}a_i1_{A_i\cap B_j},~~~~~~t=\sum_{i,j}b_j1_{A_i\cap B_j},\]
+og dermed
+\[s+t = s=\sum_{i,j}(a_i+b_j)1_{A_i\cap B_j},\]
+hvoraf vi ser, at 
+\[\Int{s}+\Int{t}=\sum_{i,j}a_i\mu(A_i\cap B_j)+\sum_{i,j}b_j\mu(A_i\cap B_j) = \sum_{i,j}(a_i+b_j)\mu(A_i\cap B_j)=\Int{s+t}.\]
+\end{proof}
+\begin{lemma}
+For simple $\EE$-målelige funktioner $s,t\colon X\to[+,\infty[$, hvor $s\leq t$, gælder
+\[\Int{s}\leq\Int{t}.\]
+\end{lemma}
+\begin{proof}
+Da $t=s+(t-s)$ med $t-s\geq 0$ har vi
+\[\Int{t}=\Int{s}+\Int{t-s}\geq\Int{s}.\]
+\end{proof}
+
+
+\newpage
+\addtocounter{chapter}{1}
+\section*{3. Lebesgues Majorantsætning.}
+\begin{theorem}
+Lad $f_n\colon X\to\RR, n=1,2,\ldots,$ være $\EE$-målelige funktioner, og lad følgen $\{f_n(x)\}$ være konvergent i $\RR$ for alle $x\in X$. Hvis der eksisterer et $g\in\M(X,\EE)$ med $\int g\, d\mu<\infty$, sådan at $\forall n: \lvert f_n\rvert\leq g$, da er $f_n, \forall n$ og $f=\lim f_n$ alle integrable mht. $\mu$, og 
+\begin{equation}\label{eq:3}
+\int f_n \, d\mu \xrightarrow[n\to\infty]{}\int f\, d\mu.
+\end{equation}
+\end{theorem}
+\begin{proof}
+Lad majoranten $g$ være givet. Da $f_1, f_2,\ldots$ er $\EE$-målelige, så er $f= \lim f_n$ $\EE$-målelig. Desuden da $\lvert f_n\rvert\leq g$, og dermed $\lvert f\rvert\leq g$. Disse er derfor $\mu$-integrable.
+
+\bigskip
+
+\noindent Vi beviser nu \eqref{eq:3} i to trin. Først for $g(x)<\infty, \forall x\in X$, og dernæst inkluderer vi muligheden for, at $g(x)=\infty$ for nogle $x\in X$.
+
+\bigskip
+
+\noindent Da $\lvert f_n\rvert \leq g$, har vi, at $g+f_n\geq 0$ og $g-f_n\geq 0$. Da $\{f_n(x)\}$ er konvergent i $\RR$ for alle x, har vi, at
+\[\liminf(g+f_n)=\lim(g+f_n)=g+f,\]
+Men så giver Fatous lemma, at
+\[\int (g+f) \, d\mu\leq\liminf\int(g+f_n)\,d\mu,\]
+og dermed har vi
+\begin{align*}
+\Int{g}+\Int{f} & \leq\liminf\left(\Int{g}+\Int{f_n}\right) \\ & = \Int{g}+\liminf\Int{f_n}.
+\end{align*}
+Vi kan altså trække $\Int{g}$ fra på begge sider, og dermed opnås
+\[\Int{f}\leq\liminf\Int{f_n}.\]
+Tilsvarende for $g-f_n$ fås 
+\[\Int{g-f}=\Int{g}-\Int{f},\]
+hvilket giver
+\begin{align*}
+\Int{g}-\Int{f}&\leq\liminf\Int{g-f_n}\\&=\Int{g}-\limsup\Int{f_n},
+\end{align*}
+og så er
+\[\limsup\Int{f_n}\leq\Int{f}.\]
+Sammen holdt har vi
+\[\Int{f}\leq\liminf\Int{f_n}\leq\limsup\Int{f_n}\leq\Int{f},\]
+dermed er
+\[\liminf\Int{f_n}=\limsup\Int{f_n}=\Int{f},\]
+hvilket vil sige
+\[\Int{f_n}\xrightarrow[n\to\infty]{}\Int{f}.\]
+
+\bigskip
+
+Vi gør det nu generelt ved at tillade, at $g(x)=\infty$ for nogle $x$. Lad $N=\{x\in X\vert g(x)=\infty\}$, så er $g\cdot 1_{X\backslash N}$ en $\mu$-integrabel majorant for $f_1\cdot 1_{X\backslash N}, f_2\cdot 1_{X\backslash N},\ldots,$ og dermed i følge ovenstående gælder
+\[\Int{f_n\cdot 1_{X\backslash N}\xrightarrow[n\to\infty]{}\Int{f\cdot 1_{X\backslash N}}}.\]
+Da $\infty 1_N\leq g$, og dermed \[\infty\mu(N) \leq \Int{f},\]
+har vi, at $\Int{g}<\infty\Rightarrow\mu(N)=0$. Dette betyder altså, at
+\[\Int{f_n}=\Int{f_n\cdot 1_{X\backslash N}}\text{ og }\Int{f}=\Int{f\cdot 1_{X\backslash N}}.\]
+\end{proof}
+
+\newpage
+\addtocounter{chapter}{1}
+\section*{4. Entydighedssætningen for mål.}
+\begin{definition}
+Et system $\D$ af delmængder af en mængde $X$ kaldes en $\sigma$-klasse i $X$, hvis
+\begin{enumerate}
+\item $X\in\D$.
+\item $\complement A\in\D$, hvis $A\in\D$.
+\item $\bigcup_{n\in\mathbb{N}}A_n\in\D$, når $(A_n)_{n\geq 1}$ er en følge af parvist disjunkte mængder fra $\D$.
+\end{enumerate}
+\end{definition}
+\begin{theorem}
+Lad $\mu$ og $\nu$ være mål på en $\sigma$-algebra $\EE$ i $X$, og antag, at $\K$ er et fællesmængdestabilt frembringersystem for $\EE$.  Antag ydermere, at $X$ kan skrives som forening $\bigcup^\infty_nK_n$ med $K_1\subseteq K_2\subseteq\ldots$, hvor $K_n\in\K$ og $\mu(K_n)<\infty, n=1,2\ldots.$ Hvis $\mu(K)=\nu(K)$ for alle $K\in\K$, så er $\mu=\nu$.
+\end{theorem}
+\begin{proof}
+Antag først, at $\forall K\in\K, \mu(K)=\nu(K)$, og sæt \[\D_n = \{E\in\EE\vert\mu(K_n\cap E)=\nu(K_n\cap E)\}, n=1,2,\ldots.\]
+Det kommer nu ud på at vise, at $\D_n = \EE$, for $n=1,2,\ldots.$
+
+\bigskip
+
+\noindent Lad $K\in\K$. Da $\K$ er fællesmængdestabilt er $K_n\cap K\in\K$, og dermed $\mu(K_n\cap K)=\nu(K_n\cap K)$ for $n=1,2,\ldots$. Men så er $\K\subseteq\D_n$ for $n=1,2,\ldots$.
+
+\bigskip
+
+\noindent Vi vil nu vise, at $\D_n$ er en $\sigma$-klasse for $n=1,2,\ldots$.
+\begin{enumerate}
+\item Da $X=\bigcup_n K_n$, så er $X\in\D_n$. (Trivielt)
+\item Lad $E\in\D_n$. Da $\mu(K_n)=\nu(K_n)<\infty$ er \[\mu ({K_n} \cap \complement E) = \mu ({K_n}) - \mu ({K_n} \cap E) = \nu ({K_n}) - \nu ({K_n} \cap E) = \nu ({K_n} \cap \complement E),\] og dermed er $\complement E\in\D_n$.
+\item Lad $E_1, E_2,\ldots\in\D_n$ være parvist disjunkte, så er (jvf. definitionen af mål)
+\[\mu ({K_n} \cap \bigcup\limits_j {{E_j}} ) = \sum\limits_j {\mu ({K_n} \cap {E_j})}  = \sum\limits_j {\nu ({K_n} \cap {E_j})}  = \nu ({K_n} \cap \bigcup\limits_j {{E_j}} ),\]
+og dermed er $\bigcup_jE_j\in\D$.
+\end{enumerate}
+Men så må $\D(\K)\subseteq\D_n$. Lemma 5.3 i bogen siger, at hvis $\K$ er fællesmængdestabilt, da er $\D(\K)=\sigma(\K)$. Men da $\K$ er frembringersystem for $\EE$, så er $\D(\K)=\sigma(\K)=\EE$. Dermed er $D_n = \EE$ for $n=1,2,\ldots$, og dermed er 
+\[\mu(K_n\cap E)=\nu(K_n\cap E), \forall E\in\EE, n\geq 1.\]
+Da $K_1\cap E\subseteq K_2\cap E\subseteq\ldots$ og $\bigcap_n (K_n\cap E) = E$ får vi, at
+\[\mu(E) = \lim_n\mu(K_n\cap E)=\lim_n\nu(K_n\cap E) = \nu(E), \forall E\in\EE.\]
+\end{proof}
+
+\newpage
+\addtocounter{chapter}{1}
+\section*{5. Invarians af lebesguemålet; Målforhold.}
+For billedmålet af $\mu$ under $\phi\colon(X,\EE)\to(Y,\FF)$ gælder
+\[\phi(\mu)(B) = \mu(\phi^{-1}(B)),~~~~B\in\FF.\]
+Ydermere siges et Borelmål at være invariant ved $\phi$, hvis $\phi(\mu)$ er lig med $\mu$, dvs.
+\[\forall B\in\mathbb{B}_k\colon\mu(\phi^{-1}(B))=\mu(B).\]
+(Husk: $\phi$ skal være en homeomorfi afbildning fra $\RR^k\to\RR^k$. Og Radonmål er et Borelmål (defineret på en Borelmængde), som har endelig værdi for enhver begrænset Borelmængde.)
+\begin{theorem}
+Lebesguemålet $m_k$ i $\RR^k$ er translationsinvariant.
+\end{theorem}
+\begin{proof}
+Translationen $\tau_a$ for $a\in\RR^k$ defineret ved
+\[\tau_a(x)=x+a,~~x\in\RR^k\]
+er en homeomorf afbildning fra $\RR^k$ på sig selv med $\tau_a^{-1} = \tau_{-a}$. Ved translationen føres $m_k$ over i målet $\tau_a(m_k)$ og for hvert standardinterval $I$ i $\RR^k$ vil $\tau_a^{-1}(I) = \tau_{-a}(I)$ være et nyt standardinterval med samme kantlængder, hvorfor
+\[\tau_a(m_k)(I)=m_k(\tau^{-1}(I))=m_k(I).\]
+Entydighedssætningen giver da, at $\tau_a(m_k)=m_k$.
+\end{proof}
+\begin{theorem}
+Lebesguemålet $m_k$ i $\RR^k$ er invariant ved enhver isometri $\phi\colon\RR^k\to\RR^k$ med hensyn til den euklidiske metrik.
+\end{theorem}
+\begin{proof}
+Mængder $E,F\subset\RR^k$ kaldes kongruente, hvis der findes en isometri $\phi(E)=F$. Vi skal vise, at kongruente Borelmængder i $\RR^k$ har samme Lebesguemål. En isometri kan udtrykkes ved $\phi(x)=Ax+a$, hvor $A$ er en ortogonal matrix og $a\in\RR^k$.
+
+\bigskip
+
+Ved $\phi^{-1}$ føres $m_k$ over i Radonmålet $\nu=\phi^{-1}(m_k)$ defineret ved \[\nu(E)=m_k(\phi(E)),~~E\in\mathbb{B}_k.\]
+Da vi nu har for $E\in\mathbb{B}_k$ og $a\in\RR^k$:
+\[\nu(E+a)=m_k(\phi(E+a))=m_k(\phi(E)+\phi(a))=m_k(\phi(E))=\nu(E).\]
+Altså er $\nu$ translationsinvariant, men i henhold til Sætning 5.16 er $cm_k$, for $0\leq c$, de eneste Radonmål i $\RR^k$, der har denne egenskab. Sættes
+\[B=\{(x_1,\ldots,x_k)\vert\sum_{i=1}^kx_i^2<1\},\]
+til enhedskuglen i $\RR^k$, er $\phi(B)=B$, da denne er invariant under en orthogonal afbildning. Dermed er
+\[\nu(B)=m_k(\phi(B))=m_k(B), 0<m_k(B)<\infty,\]
+hvormed $c=1$, altså $\nu=m_k$, dvs. $m_k$ er invariant ved $\phi^{-1}$.
+\end{proof}
+
+\newpage
+\addtocounter{chapter}{1}
+\section*{6. Produktmål.}
+\begin{theorem}
+Lad $(X,\EE,\mu)$ og $(Y,\FF,\nu)$ være to $\sigma$-endelige målrum. Der findes et og kun et mål $\pi$ på produkt $\sigma$-algebraen $\EE\otimes\FF$ med egenskaben
+\begin{equation}\label{produkt}
+\pi(A\times B)=\mu(A)\nu(B), \text{ for } A\in\EE, B\in\FF.
+\end{equation}
+Målrummet $(X\times Y,\EE\otimes\FF,\mu\otimes\nu)$ er $\sigma$-endeligt.
+\end{theorem}
+\begin{proof}
+{\bf{Entydighed:}} Entydighedssætningen for mål kræver, at vi har et stabilt frembringersystem, $\K$, for $\EE\otimes\FF$, og at $X\times Y = \bigcup_{n = 1}^\infty  {K_n}$ for $K_1\subseteq K_2\subseteq\ldots$.
+Lader vi
+\[\K = \{A\times B\vert A\in\EE,B\in\FF\},\]
+er dette et fællesmængdestabilt frembringersystem for $\EE\otimes\FF$, da
+\[\left(A_1\times B_1\right)\cap\left(A_2\times B_2\right) = \left(A_1\cap A_2\right)\times\left(B_1\cap B_2\right).\]
+$\sigma$-endeligheden giver, at der findes $A_1\subseteq A_2\subseteq\ldots\in\EE$ og $B_1\subseteq B_2\subseteq\ldots\in\FF$ med $\mu(A_n)<\infty$ og $\nu(B_n)\infty$, sådan at $X = \bigcup_{n = 1}^\infty  {A_n}$ og $Y=\bigcup_{n=1}^\infty {B_n}$. Lader vi $K_n=A_n\times B_n, n=1,2\ldots$ gælder $K_1\subseteq K_2\subseteq\ldots\in\K$, og $X\times Y=\bigcup_{n=1}^\infty K_n$. Hvis $\pi$ og $\rho$ er mål på $\EE\otimes\FF$, som opfylder \eqref{produkt}, er
+\[\pi(A\times B)=\mu(A)\nu(B)=\rho(A\times B), \text{ for }A\in\EE,B\in\FF,\]
+og $\mu(K_n)=\mu(A)\nu(B)<\infty.$ Dermed giver entydighedssætningen for mål, at $\pi=\rho$. Ydermere ses det, at $(X\times Y,\EE\otimes\FF,\pi)$ er $\sigma$-endeligt.
+
+\bigskip 
+
+\noindent{\bf{Eksistens:}} Lad $\pi\colon\EE\otimes\FF\to[0,\infty]$ være givet ved
+\[\pi(G)=\int_X\nu(G_x)\,d\mu(x).\]
+Vi skal først vise, at integralet giver mening ved at vise, at $x\mapsto\nu(G_x)$ er $\EE$-målelig og dernæst vise, at $\pi(G)$ er et mål, samt er lig \eqref{produkt}. Vi starter med $\EE-$måleligheden:
+\begin{lemma}
+For alle $G\in\EE\otimes\FF$ er $\phi_G\colon X\to[0,\infty]$ defineret ved $\phi_G(x)=\nu(G_x)$ en $\EE$-målelig funktion.
+\end{lemma}
+\begin{proof}
+Sætning 6.3 i bogen giver, at $G_x\in\FF$, og dermed giver $\phi_G$ mening. $\phi_G$ har bl.a. egenskaberne:
+\begin{enumerate}[label=(\alph*)]
+\item For $G=A\times B$ med $A\in\EE, B\in\FF$ gælder $\phi_G = \nu(B)1_A$.
+\item Hvis $G_1,G_2,\ldots\in\EE\otimes\FF$ er parvis disjunkte, og $G=\bigcup_1^\infty G_n$, da er \[\phi_G = \sum\limits_1^\infty\phi_{G_n}.\] 
+\end{enumerate}
+Vi viser første del af Lemma'et under forudsætning af $\nu(Y)<\infty$.
+
+\bigskip
+
+Grundet (a) har vi, at 
+\[\K\subseteq\{G\in\EE\otimes\FF\vert\phi_G\in\M(X,\EE)\}=\D.\]
+Da $\K\subseteq\D$ er $X\times Y\in\D$.\\
+Hvis $G_1,G_2,\ldots\in\D$ er parvis disjunkte, så er $\phi_{G_n}\in\M(X,\EE)$, men så giver regler for grænser, at $\sum_1^\infty\phi_{G_n}\in\M(X,\EE)$, hvilket af (b) er $\phi_G$. Dermed er $G=\bigcup_1^\infty G_n\in\D$.\\
+Da $\phi_{X\times Y} = \phi_G + \phi_{\complement G}$ og antaget, at  $\phi_{X\times Y}(x)=\nu(Y)<\infty$, har vi, at $\phi_G$ antager endelige værdier - dermed er $\phi_{\complement G} = \nu(Y)-\phi_G\in\M(X,\EE)$, hvormed $\complement G\in\D$.\\
+Altså er $\D$ en $\sigma$-klasse. Da $\K$ er et fællesmængdestabilt frembringersystem for $\EE\otimes\FF$ giver Fundamentallemmaet, at $\D(\K)=\sigma(\K)=\EE\otimes\FF$, men da $\D$ er en $\sigma$-klasse indeholdende $\K$ er $\D(\K)\subseteq\D$, men så er $\D=\EE\otimes\FF$.
+
+\bigskip
+
+\footnote{Spring sidste del af lemmaet over, hvis for meget tid bruges.}For det generelle tilfælde bruges $\sigma$-endeligheden for $(Y,\FF,\nu)$, da vi dermed har $B_1\subseteq B_2\subseteq\ldots\in\FF$ med $\nu(B_n)<\infty, Y=\bigcup_1^\infty B_n$. For fast $n$ betragtes målet $\nu_n\colon\FF\to[0,\infty]$ defineret ved $\nu_n(B)=\nu(B\cap B_n)$. Da $\nu_n(Y)=\nu(B_n)<\infty$, kan vi af første del konkludere, at
+\[x\mapsto\phi^{(n)}_G(x)=\nu(G_x)\in\M(X,\EE).\]
+En egenskab for mål giver os da, at 
+\[\phi^{(n)}_G(x)=\nu(G_x\cap B_n)\nearrow\nu(G_x)=\phi_G(x),\]
+og dermed vil grænsefunktionen $\phi_G\in\M(X,\EE).$
+\end{proof}
+Nu har vi vist, at integralet før lemmaet har mening, og nu skal det blot vises, at $\pi\colon\EE\otimes\FF\to[0,\infty]$ er et mål, der opfylder \eqref{produkt}.\\
+Hvis $G_1,G_2,\ldots\in\EE\otimes\FF$ er parvis disjunkte, og $G=\bigcup_1^\infty G_n$, da er $\phi_G=\sum_1^\infty\phi_{G_n}$ i følge (b), og med sætningen, der kan bytte integral og sum, har vi:
+\[\pi(G)=\Int{\phi_G}=\sum\limits^\infty_1\Int{\phi_{G_n}}=\sum\limits^\infty_1\pi(G_n).\]
+For $G=A\times B$ med $A\in\EE, B\in\FF$ finder vi ifølge (a), at
+\[\pi(A\times B)=\Int{\nu(B)1_A}=\nu(B)\Int{1_A}=\nu(B)\mu(A).\]
+Men så stemmer integralet overens med \eqref{produkt}, og vi har specielt, at $G=\emptyset=\emptyset\times\emptyset\Rightarrow\pi(\emptyset)=0$.
+\end{proof}
+
+\newpage
+\addtocounter{chapter}{1}
+\section*{7. Tonelli og Fubinis sætninger.}
+\begin{theorem}[Tonellis sætning]
+Lad $(X,\EE,\mu)$ og $(Y,\FF,\nu)$ være $\sigma$-endelige målrum. For $f\in\M(X\times Y,\EE\otimes\FF)$ gælder
+\begin{enumerate}
+\item funktionen $x\mapsto\int_Yf_x\,d\nu = \int_Yf(x,y)\nu(y)$ tilhører $\M(X,\EE)$.
+\item $\int_{X\times Y}f\,d(\mu\otimes\nu)=\int_X(\int_Yf(x,y)\,d\nu(y))\,d\mu(x)$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+For $f\in\M(X\times Y,\EE\otimes\FF)$ med $x\in X$ vil $f_x\in\M(Y,\FF)$ (Sætning 6.3). Vi definerer $g\colon X\to[0,\infty]$ ved $g(x)=\int f_x\,d\nu$. Dermed siger (1), at $g\in\M(X,\EE)$, og (2) siger $\int f\,d\mu\otimes\nu=\Int{g}$.
+
+\bigskip
+
+Beviset køres i 3 trin. Første er for indikatorfunktionen, dernæst for simple funktioner og sidst udvides til vilkårlige funktioner.
+
+\bigskip
+
+{\textbf{Indikatorfunktionen}} $f=1_G$ på $X\times Y$ med $G\in\EE\otimes\FF$ har for ethvert $x\in X$, at $(1_G)_x=1_{G_x}$. Lemma 6.7 siger, at funktionen
+\[x\mapsto\nu(G_x)=\int(1_G)_x\,d\nu\]
+tilhører $\M(X,\EE)$, og Korollar 6.8 giver, at dens $\mu$-integral er $\mu\otimes\nu(G)=\int 1_G\,d\mu\otimes\nu.$
+
+\bigskip
+
+{\textbf{Simple funktioner}} på formen $f=\sum_{j=1}^na_j1_{G_j}$ på $X\times Y$ med $0<a_j<\infty, G_j\in\EE\otimes\FF$. Dette følger af indikatorfunktionerne - blot vis, at summen af to indikatorfunktioner samt en konstant ganget på en indikatorfunktion giver .
+
+\bigskip
+
+{\textbf{En vilkårlig funktion}} $f\in\M(X\times Y,\EE\otimes\FF)$ kan fås som grænsefunktion for en følge $f_1\leq f_2\leq\ldots$ af simple $\EE\otimes\FF$-målelige funktioner $f_n\colon X\times Y\to[0,\infty[$ (Sætning 4.1). Lebesgues monotonisætning giver, at 
+\[\int_{X\times Y}f\,d(\mu\otimes\nu)=\lim\limits_{n\to\infty}\int_{X\times Y}f_n\,d(\mu\otimes\nu).\]
+For hvert $x\in X$ har vi $(f_n)_x\nearrow f_x$ og dermed
+\[g_n(x)=\int_Y(f_n)_x\,d\nu\nearrow g(x)=\int_Y f_x\,d\nu\]
+ifølge Lebesgues monotonisætning. Da nu $g_n\in\M(X,\EE)$ og $g_n\nearrow g$, er $g\in\M(X,\EE)$, samt
+\[\int_X g\,d\mu = \lim\limits_{n\to\infty}\int_Xg_n\,d\mu\]
+ifølge lebesgues monotonisætning. Da $\int_{X\times Y}f\,d(\mu\otimes\nu)=\int_Xg_n\,d\mu, n=1,2,\ldots,$ sluttes endelig
+\[\int_{X\times Y}f\,d(\mu\otimes\nu)=\int_X g\,d\mu.\]
+\end{proof}
+
+
+\newpage
+\addtocounter{chapter}{1}
+\section*{8. Hölders og Minkowskis uligheder.}
+\begin{theorem}[Minkowskis ulighed]
+Når $f,g\in\L_p(X,\EE,\mu)$, hvor $1\leq p<\infty$, da er $f+g\in\L_p(X,\EE,\mu)$ og \[\laengde{f+g}_p\leq\laengde{f}_p+\laengde{g}_p.\]
+\end{theorem}
+\begin{proof}
+Da $f+g$ er $\EE$-målelig, og 
+\[\Int{|f+g|^p}\leq\Int{(|f|+|g|)^p}\leq 2^p\Int{|f|^p}+2^p\Int{|g|^p}<\infty,\]
+er $f+g\in\L(X,\EE,\mu)$.
+
+\bigskip
+
+Vi antager, at $p>1$, og lader $q$ være givet ved $p^{-1}+q^{-1}=1$. Betragt
+\[\laengde{f+g}_p^p=\Int{|f+g|^p}=\Int{|f+g||f+g|^{p-1}}\leq\Int{|f||f+g|^{p-1}}+\Int{|g||f+g|^{p-1}}.\]
+Idet $f+g\in\L_p$, er funktionen $|f+g|^{p-1}$  $\EE$-målelig, og 
+\[\Int{|f+g|^{(p-1)q}}=\Int{|f+g|^p}<\infty,\]
+da $pq = p+q$, og dermed er $|f+g|^{p-1}\in\L_q$ med
+\[\laengde{|f+g|^{p-1}}_q=\left(\Int{|f+g|^{(p-1)q}}\right)^{1/q}=\left(\Int{|f+g|^p}\right)^{1/q} = \laengde{f+g}_p^{p/q}=\laengde{f+g}_p^{p-1}.\]
+Hölders ulighed giver så
+\[\Int{|f||f+g|^{p-1}}\leq\laengde{f}_p\laengde{f+g}_p^{p-1},\]
+\[\Int{|g||f+g|^{p-1}}\leq\laengde{g}_p\laengde{f+g}_p^{p-1}.\]
+Sammenholdt har vi altså
+\[\laengde{f+g}_p^p\leq(\laengde{f}_p+\laengde{g}_p)\laengde{f+g}_p^{p-1},\]
+og ganges begge sider med $\laengde{f+g}^{1-p}_p$ opnås Minkowskis ulighed.
+\end{proof}
+
+
+\newpage
+\addtocounter{chapter}{1}
+\section*{9. Lebesguerummene $L_p$ og deres fuldstændighed.}
+Lebesguerummene, $L_p$, har samlet funktioner fra $\L_p$ i klasser ved ækvivalensrelationen \[f\sim g\Leftrightarrow\laengde{f-g}_p=0.\]
+\begin{theorem}
+Lad $(X,\EE,\mu)$ være et målrum og $1\leq p<\infty$. Funktionsrummet $\L_p=\L_p(X,\EE,\mu)$ er fuldstændigt. (Eller Lebesguerummet $L_p$ er et Banachrum jvf. Sætning 7.17).
+\end{theorem}
+\begin{proof}
+Vi ved, at $L_p$ er et vektorrum med seminorm \[\laengde{f}_p=\left(\Int{|f|^p}\right)^{1/p}, f\in\L_p(X,\EE,\mu).\] Dermed er det nok at vise, at  $\sum_1^\infty g_k$ med $g_k\in\L_p$, hvor $\sum_1^\infty \laengde{g_k}_p < \infty$, er konvergent i $\L_p$ jvf. Sætning 7.16. Vi søger altså en funktion $f\in\L_p$, sådan at \[\laengde{f-\sum\limits_{k=1}^ng_k}_p\to 0,\, for\,\,n\to\infty.\]
+
+\bigskip
+
+Lad \[h(x)=\sum\limits_{k=1}^\infty|g_k(x)|,~~x\in X.\]
+For hvert $x\in X$ sådan at $h(x)<\infty$ er $h\colon X\to[0,\infty]$ $\EE$-målelig, og $\sum_1^\infty g_k$ er absolut konvergent.
+
+\bigskip
+
+For $n\to\infty$ er $\sum_1^n|g_k(x)|\nearrow h(x)$ for alle $x\in X$, og dermed
+\[\left(\sum\limits_{k=1}^n|g_k|\right)^p\nearrow (h(x))^p.\]
+Lebesgues monotonisætning giver nu
+\[\Int{\left(\sum\limits_{k=1}^n|g_k|\right)^p}\nearrow\Int{h^p},\]
+hvormed vi kan opnå
+\[\laengde{\sum\limits_{k=1}^n|g_k|}_p\nearrow\left(\Int{h^p}\right)^{1/p}.\]
+Af Minkowskis ulighed har vi, at $\laengde{\sum_1^n|g_k|}_p\leq\sum_1^n\laengde{g_k}_p$ for alle $n\in\mathbb{N}$, og derfor er
+\[\left(\Int{h^p}\right)^{1/p}\leq \sum\limits_{k=1}^n\laengde{g_k}_p<\infty.\]
+Men så er $\Int{h^p}<\infty$, og dermed giver Korollar 4.5, at 
+\[N=\{x\vert h(x)=\infty\}=\{x\vert (h(x))^p=\infty\}\]
+har mål $\mu(N)=0$. Rækken $\sum_1^\infty g_k(x)$ er altså absolut konvergent f or $\mu$-næsten alle $x\in X$, og dermed kan vi definere $f\colon X\to\mathbb{C}$ ved
+\[f\left( x \right) = \left\{ \begin{gathered}
+  \sum_{k=1}^\infty g_k(x) \hfill ~~for\,\, x\in X\backslash N \\
+  0~~for\,\, x\in N. \hfill \\ 
+\end{gathered}  \right.\]
+Af Tuborg-resultatet og grænseværdi-sætninger er $f$ målelig. Derudover er $|f(x)\leq h(x), x\in X$, hvoraf
+\[\laengde{f}_p=\left(\Int{|f|^p}\right)^{1/p}\leq\left(\Int{h^p}\right)^{1/p}\leq\sum\limits_{k=1}^n\laengde{g_k}_p<\infty.\]
+Dermed er $f\in\L_p$. Da $\sum_1^n\to f$ $\mu$-n.o, og $h$ er en majorant giver Sætning 7.10, at $\laengde{f-\sum_1^n g_k}_p\to 0$, for $n\to\infty$.
+\end{proof}
+
+\bigskip
+
+Ekstra detalje: $\laengde{\cdot}_p$ er ikke en almindelig norm i $\L_p(X,\EE,\mu)$, da
+\[\laengde{f}_p=\left(\Int{|f|^p}\right)^{1/p} = 0\Leftrightarrow f=0\,\,\mu-n.o.\]
+
+
+\newpage
+\addtocounter{chapter}{1}
+\section*{10. Fouriertransformationen på $\RR^k$.}
+\begin{definition}
+Når $f\colon\RR^k\to\mathbb{C}$ tilhører $\L_1(\RR)$, defineres den Fourier-transformerede af $f$, $\hat{f}\colon\RR^k\to\mathbb{C}$, ved 
+\[\hat{f}(\xi) = \int_{\RR^k}e^{-i\xi\cdot x}f(x)\,dx,~~for\,\,\xi\in\RR^k.\]
+Afbildningen $\FI\colon f\mapsto\hat{f}$ kaldes Fourier-transformationen.
+\end{definition}
+\begin{theorem}
+Fouriertransformationen $\FI$ er en kontinuert lineær afbildning af $L_1(\RR^k)$ ind i $C_b(\RR^k)$, og der gælder
+\[\laengde{\hat{f}}_u\leq\laengde{f}_1~~~~for~~f\in\L_1(\RR^k).\]
+\end{theorem}
+\begin{proof}
+
+\end{proof}
+
+\begin{theorem}
+Lad $f\in\L_1(\RR)$ og $\xi\in\RR$.
+\begin{enumerate}
+\item Hvis $xf(x)\in\L_1(\RR)$, så er $\hat{f}\in C^1(\RR)$ og \[\FI(xf(x))(\xi)=i\hat{f}^\prime(\xi).\]
+\item Hvis $f\in C^1(\RR)$ og $f^\prime\in\L_1(\RR)$ så er \[\FI(f^\prime)(\xi)=i\xi\hat{f}(\xi).\]
+\end{enumerate}
+\begin{proof}
+For (1) giver Sætning 4.28, at \[\hat{f}^\prime(\xi)=\int\frac{\partial}{\partial\xi}\left(e^{-i\xi x}f(x)\right)\,dx=\int -ixe^{-i\xi x}f(x)\,dx=-i\FI(xf(x))(\xi),\]
+da $g=|xf(x)|$ er en majorant for $x\mapsto-ixe^{-i\xi x}f(x),~~\xi\in\RR$.
+
+\bigskip
+
+For (2) bruger vi, at $\int_{|x|\geq n}|f^\prime(t)|\, dt\to 0,$ for $n\to\infty$ ifølge Lebesgues monotonisætning. For ethvert $\epsilon$ findes altså et $N\in\mathbb{N}$, så
+\[\int_{|x|\geq N}|f^\prime(t)|\, dt\leq\epsilon,\]
+hvoraf $x_1,x_2\geq N$ eller $x_1,x_2\leq-N$, og dermed
+\[|f(x_2)-f(x-1)|=\lvert\int_{x_1}^{x_2}f^\prime(t)\,dt\rvert\leq\int_{|x|\geq N}|f^\prime(t)|\, dt\leq\epsilon,\]
+hvoraf vi ser, at $\lim_{x\to\pm\infty}f(x)$ eksisterer.
+
+\bigskip
+
+Lad $\lim_{x\to\infty}f(x)=a\neq 0$, så findes $N>0$ så $|f(x)|\geq\frac{1}{2}|a|$ for $x\geq N$, hvilket strider mod, at $f$ er integrabel. På samme måde ses $\lim_{x\to-\infty}f(x)=0$. For $x_1<x_2$ giver partiel integration
+\[\int_{x_1}^{x_2}e^{-i\xi x}f^\prime(x)\,dx=[e^{-i\xi x}f(x)]_{x_1}^{x_2}+i\xi\int_{x_1}^{x_2}e^{-i\xi x}f(x)\,dx.\]
+Lad vi $x_1\to-\infty$ og $x_2\to\infty$ vil $f(x)\to 0$, og integralerne bliver til
+\[\FI(f^\prime)(\xi)=i\xi\hat{f}(\xi),\]
+da $f,f^\prime\L_1(\RR)$ pr. antagelse.
+\end{proof}
+\end{theorem}
+
+\newpage
+\addtocounter{chapter}{1}
+\section*{11. Foldning på $\RR^k$.}
+\begin{definition}
+Ved foldningen $f\ast g$ af to Borelfunktioner $f,g\colon\RR^k\to\mathbb{C}$ forstås funktionen \[f\ast g(x)=\int_{\RR^k}f(x-t)g(t)\,dt,~~~x\in\RR^k,\]
+hvis definitionsområde er mængden 
+\[\DD(f\ast g) = \left\{x\in\RR^k\vert\int|f(x-t)g(t)|\,dt<\infty\right\}.\]
+\end{definition}
+\begin{theorem}
+For $f,g\in\L_1(\RR^k)$ er foldningen defineret for næsten alle $x\in\RR^k$ og bestemmer et element i $L_1(\RR^k)$, som betegnes $f\ast g$ for hvilket, der gælder \[\laengde{f\ast g}_1\leq\laengde{f}_1\laengde{g}_1.\]
+\end{theorem}
+\begin{proof}
+Da $f\otimes g$ af Lemma 6.2 er Borelmålelig på $\RR^{2k}$ gælder dette også for sammensætningen $(x,t)\mapsto(x-t,t)$, dvs.
+\[(x,t)\mapsto f(x-t)g(t),~~~~x,t\in\RR^k.\]
+Denne funktion tilhører $\L_1(\RR^{2k})$, da vi med Tonellis sætning og translationsinvariansen af Lebesguemålet i $\RR^k$ finder
+\begin{align*}
+\int_{\RR^{2k}}|f(x-t)g(t)\,d(x,t) & =\int_{\RR^k}\left(|g(t)|\int_{\RR^k}|f(x-t)|\,dx\right)\,dt \\ &=\int_{\RR^k}\left(|g(t)|\int_{\RR^k}|f(x)|\,dx\right)\,dt = \laengde{f}_1\laengde{g}_1<\infty.
+\end{align*}
+Fubinis sætning giver nu, at $t\mapsto f(x-t)g(t)$ er integrabel for næsten alle $x\in\RR^k$, og at den næsten overalt i $\RR^k$ definerede funktion $f\ast g$ bestemmer et element i $L_1(\RR^k)$.
+
+\bigskip
+
+Da
+\[|(f\ast g)(x)|\leq\int_{\RR^k}|f(x-t)g(t)|\,dt\]
+får vi ved at tage integralet på begge sider:
+\[\laengde{f\ast g}_1\leq\int_{\RR^k}\int_{\RR^k}|f(x-t)g(t)\,dtdx=\int_{\RR^{2k}}|f(x-t)g(t)\,d(x,t)=\laengde{f}_1\laengde{g}_1.\]
+\end{proof}
+\begin{theorem}
+For $f,g\in L_1(\RR^k)$ gælder $\FI(f\ast g)=\FI f\cdot \FI g$.
+\end{theorem}
+\begin{proof}
+Fubinis sætning og Lebesguemålets invarians giver
+\begin{align*}
+\FI(f\ast g)(\xi) & = \int_{\RR^k}e^{-i\xi\cdot x}\left(\int_{\RR^k}f(x-y)g(y)\,dy\right)\,dx = \int_{\RR^{2k}}e^{-i\xi\cdot x}f(x-y)g(y)d(x,y)\\ & = \int_{\RR^k}g(y)\left(\int_{\RR^k}e^{-i\xi\cdot x}f(x-y)\,dx\right)\,dy = \int_{\RR^k}g(y)\left(\int_{\RR^k}e^{-i\xi\cdot (x+y)}f(x)\,dx\right)\,dy \\ & = \int_{\RR^k}e^{-i\xi\cdot x}f(x-y)\,dx\int_{\RR^k}e^{-i\xi\cdot y}g(y)\,dy = \FI f(\xi)\FI g(\xi).
+\end{align*}
+\end{proof}
+
+\newpage
+\addtocounter{chapter}{1}
+\section*{12. Parsevals ligning.}
+\begin{theorem}[Parseval's ligning for $\FS(\RR^k)$]
+For $f,g\in\FS$ gælder
+\[\int f(x)\overline{g(x)}\,dx = (2\pi)^{-k}\int\hat{f}(\xi)\overline{\hat{g}(x)(\xi)}\,d\xi\]
+\end{theorem}
+\begin{proof}
+Lad $f,g\in\FS$. Så giver Sætning 8.8, at
+\[g(x)=(2\pi)^{-k}\int e^{i\xi\cdot x}\hat{g}(\xi)\,d\xi,\] og under udnyttelse af Fubinis sætning, kan vi ombytte integrationsordenen og opnår:
+\begin{align*}
+\int f(x)\overline{g(x)}\,dx & =(2\pi)^{-k}\int f(x)\int e^{-i\xi\cdot x}\overline{\hat{g}(\xi)}\,d\xi\,dx\\& = (2\pi)^{-k}\int\int f(x) e^{-i\xi\cdot x}\,dx\,\overline{\hat{g}(\xi)}\,d\xi = (2\pi)^{-k}\int\hat{f}(\xi)\overline{\hat{g}(x)(\xi)}\,d\xi
+\end{align*}
+\end{proof}
+\begin{theorem}
+Når $f\in\FS(\RR^k)$ og $\hat{f}=\FI f$, så er
+\[f(x)=(2\pi)^{-k}\int e^{i\xi\cdot x}\hat{f}(\xi)\,d\xi.\]
+\end{theorem}
+\begin{proof}
+Vi ønsker at beregne $(2\pi)^{-k}\int e^{i\xi\cdot x}(\int e^{-i\xi\cdot y}\,dy)\,d\xi$ med $f\in\FS$. Vi kan ikke bytte om på integrationsrækkefølgen, da funktionen $e^{i\xi\cdot(x-y)f(y)}$ er ikke integrabel på $\RR^{2k}$, da et fastholdt $y$ vil medføre, at den indre funktion ikke konvergerer mod $0$.
+
+\bigskip
+
+Vi introducerer derfor en integrationsfaktor $\psi(\epsilon\xi)$, hvor $\psi\in\FS(\RR^k)$, og $\epsilon>0$.
+Vi opstiller altså:
+\[\int_{\RR^k}e^{i\xi\cdot x}\psi(\epsilon\xi)\hat{f}\,d\xi = \int_{\RR^k}e^{i\xi\cdot x}\psi(\epsilon\xi)\left(\int_{\RR^k}e^{-i\xi\cdot y}f(y)\,dy\right)\,d\xi=\int_{\RR^{2k}}e^{-i\xi\cdot (y-x)}\psi(\epsilon\xi)f(y)\,d(\xi,y).\]
+Vi vil nu lave variabelskift med $\phi(\xi,y)=(\eta,z)=(\epsilon\xi,(y-x)/\epsilon)$, og vi skal bruge, at Transformationssætningen pålyder
+\[\int_Yf(y)\,dy =\int_X f(\phi(x))|\det D\phi(x)|\,dx.\]
+Jacobi-determinanten for $\phi$ kan hurtigt udregnes til at give 1. Vi får da:
+\[\int_{\RR^{2k}}e^{-i\xi\cdot (y-x)}\psi(\epsilon\xi)f(y)\,d(\xi,y) = \int_{\RR^{2k}}e^{-i\eta\cdot z}\psi(\eta)f(x+\epsilon z)\,d(\eta,z) = \int_{\RR^k}\hat{\psi}(z)f(x+\epsilon z)\,dz.\]
+Lad $\epsilon=1/n$ og lad  $n\to\infty$, så $\epsilon\to 0$. Dermed vil $e^{i\xi\cdot x}\psi(\epsilon\xi)\hat{f}(\xi)\to\psi(0)e^{i\xi\cdot x}\hat{f}(\xi)$, med $|e^{i\xi\cdot x}\psi(\epsilon\xi)\hat{f}(\xi)|\leq C|\hat{f}(\xi)|$, hvor $C=\sup_\xi|\psi(\xi)|$. Derudover er $\hat{\psi}(z)f(x+\epsilon z)\to\hat{\psi}(z)f(x)$, med $|\hat{\psi}(z)f(x+\epsilon z)|\leq C'|\hat{\psi(z)},$ hvor $C'=\sup_y|f(y)|$. Sættes $\psi(\xi)=e^{-\laengde{\xi}^2/2}$ fås $\psi(0)=1$, $\hat{\psi}(z)=(2\pi)^{k/2}e^{-\laengde{z}^2/2}$ og $\int\hat{\psi(z)}\,dz=(2\pi)^k.$
+\end{proof}
+\end{document}
