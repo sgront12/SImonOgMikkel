@@ -87,6 +87,7 @@
 \newcommand{\DD}{\mathcal{D}}
 \newcommand{\W}{\mathcal{W}}
 \newcommand{\FI}{\mathcal{F}}
+\newcommand{\PI}{\mathcal{P}}
 \newcommand{\FII}{\mathcal{F}_{II}}
 \newcommand{\M}{\mathcal{M}^+}
 \renewcommand{\L}{\mathcal{L}}
@@ -100,13 +101,14 @@
 \DeclareMathOperator{\inte}{int}
 \DeclareMathOperator{\spa}{span}
 
-\title{Dispositioner til mål- og integrationsteori}
+\title{Dispositioner til mål- og integrationsteori, men også målteori og stokastiske processer}
 \author{Mikkel Findinge}
 \setcounter{chapter}{1}
 \begin{document}
 \maketitle
 \definecolor{qqqqff}{rgb}{0.,0.,1.}
 \definecolor{zzttqq}{rgb}{0.6,0.2,0.}
+
 \section*{Notation og begrebsliste}
 \renewcommand{\arraystretch}{3}
 \begin{tabular}{p{0.3\linewidth}p{0.7\linewidth}}
@@ -143,7 +145,8 @@ $L_p(X,\EE,\mu)$ & Vektorrum, hvor $f\sim g\Leftrightarrow\laengde{f-g}_p=0$.
 
 
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
+\chapter*{Mål- og integrationsteori}
 \section*{1. Monotonisætningen.}
 \begin{theorem}
 For enhver ikke-aftagende følge $f_1\leq f_2\leq\ldots$ af funktioner fra $\M$ gælder
@@ -178,7 +181,7 @@ Da $as\cdot 1_{E_n}\leq f_n$ og dermed $\int as\cdot 1_{E_n}\, d\mu\leq\int f_n\
 \[\int as\, d\mu = \lim\limits_{n}\int as\cdot 1_{E_n}\, d\mu\leq\lim\limits_{n}\int f_n\, d\mu.\]
 \end{proof}
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
 \section*{2. Lebesgueintegral og integrabilitet.}
 Beviser kun eksistens af målet.
 \begin{theorem}
@@ -242,7 +245,7 @@ Da $t=s+(t-s)$ med $t-s\geq 0$ har vi
 
 
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
 \section*{3. Lebesgues Majorantsætning.}
 \begin{theorem}
 Lad $f_n\colon X\to\RR, n=1,2,\ldots,$ være $\EE$-målelige funktioner, og lad følgen $\{f_n(x)\}$ være konvergent i $\RR$ for alle $x\in X$. Hvis der eksisterer et $g\in\M(X,\EE)$ med $\int g\, d\mu<\infty$, sådan at $\forall n: \lvert f_n\rvert\leq g$, da er $f_n, \forall n$ og $f=\lim f_n$ alle integrable mht. $\mu$, og 
@@ -294,7 +297,7 @@ har vi, at $\Int{g}<\infty\Rightarrow\mu(N)=0$. Dette betyder altså, at
 \end{proof}
 
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
 \section*{4. Entydighedssætningen for mål.}
 \begin{definition}
 Et system $\D$ af delmængder af en mængde $X$ kaldes en $\sigma$-klasse i $X$, hvis
@@ -332,7 +335,7 @@ Da $K_1\cap E\subseteq K_2\cap E\subseteq\ldots$ og $\bigcap_n (K_n\cap E) = E$ 
 \end{proof}
 
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
 \section*{5. Invarians af lebesguemålet; Målforhold.}
 For billedmålet af $\mu$ under $\phi\colon(X,\EE)\to(Y,\FF)$ gælder
 \[\phi(\mu)(B) = \mu(\phi^{-1}(B)),~~~~B\in\FF.\]
@@ -368,7 +371,7 @@ hvormed $c=1$, altså $\nu=m_k$, dvs. $m_k$ er invariant ved $\phi^{-1}$.
 \end{proof}
 
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
 \section*{6. Produktmål.}
 \begin{theorem}
 Lad $(X,\EE,\mu)$ og $(Y,\FF,\nu)$ være to $\sigma$-endelige målrum. Der findes et og kun et mål $\pi$ på produkt $\sigma$-algebraen $\EE\otimes\FF$ med egenskaben
@@ -429,7 +432,7 @@ Men så stemmer integralet overens med \eqref{produkt}, og vi har specielt, at $
 \end{proof}
 
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
 \section*{7. Tonelli og Fubinis sætninger.}
 \begin{theorem}[Tonellis sætning]
 Lad $(X,\EE,\mu)$ og $(Y,\FF,\nu)$ være $\sigma$-endelige målrum. For $f\in\M(X\times Y,\EE\otimes\FF)$ gælder
@@ -469,7 +472,7 @@ ifølge lebesgues monotonisætning. Da $\int_{X\times Y}f\,d(\mu\otimes\nu)=\int
 
 
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
 \section*{8. Hölders og Minkowskis uligheder.}
 \begin{theorem}[Minkowskis ulighed]
 Når $f,g\in\L_p(X,\EE,\mu)$, hvor $1\leq p<\infty$, da er $f+g\in\L_p(X,\EE,\mu)$ og \[\laengde{f+g}_p\leq\laengde{f}_p+\laengde{g}_p.\]
@@ -497,7 +500,7 @@ og ganges begge sider med $\laengde{f+g}^{1-p}_p$ opnås Minkowskis ulighed.
 
 
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
 \section*{9. Lebesguerummene $L_p$ og deres fuldstændighed.}
 Lebesguerummene, $L_p$, har samlet funktioner fra $\L_p$ i klasser ved ækvivalensrelationen \[f\sim g\Leftrightarrow\laengde{f-g}_p=0.\]
 \begin{theorem}
@@ -540,7 +543,7 @@ Ekstra detalje: $\laengde{\cdot}_p$ er ikke en almindelig norm i $\L_p(X,\EE,\mu
 
 
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
 \section*{10. Fouriertransformationen på $\RR^k$.}
 \begin{definition}
 Når $f\colon\RR^k\to\mathbb{C}$ tilhører $\L_1(\RR)$, defineres den Fourier-transformerede af $f$, $\hat{f}\colon\RR^k\to\mathbb{C}$, ved 
@@ -584,7 +587,7 @@ da $f,f^\prime\L_1(\RR)$ pr. antagelse.
 \end{theorem}
 
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
 \section*{11. Foldning på $\RR^k$.}
 \begin{definition}
 Ved foldningen $f\ast g$ af to Borelfunktioner $f,g\colon\RR^k\to\mathbb{C}$ forstås funktionen \[f\ast g(x)=\int_{\RR^k}f(x-t)g(t)\,dt,~~~x\in\RR^k,\]
@@ -621,7 +624,7 @@ Fubinis sætning og Lebesguemålets invarians giver
 \end{proof}
 
 \newpage
-\addtocounter{chapter}{1}
+%\addtocounter{chapter}{1}
 \section*{12. Parsevals ligning.}
 \begin{theorem}[Parseval's ligning for $\FS(\RR^k)$]
 For $f,g\in\FS$ gælder
@@ -652,4 +655,128 @@ Jacobi-determinanten for $\phi$ kan hurtigt udregnes til at give 1. Vi får da:
 \[\int_{\RR^{2k}}e^{-i\xi\cdot (y-x)}\psi(\epsilon\xi)f(y)\,d(\xi,y) = \int_{\RR^{2k}}e^{-i\eta\cdot z}\psi(\eta)f(x+\epsilon z)\,d(\eta,z) = \int_{\RR^k}\hat{\psi}(z)f(x+\epsilon z)\,dz.\]
 Lad $\epsilon=1/n$ og lad  $n\to\infty$, så $\epsilon\to 0$. Dermed vil $e^{i\xi\cdot x}\psi(\epsilon\xi)\hat{f}(\xi)\to\psi(0)e^{i\xi\cdot x}\hat{f}(\xi)$, med $|e^{i\xi\cdot x}\psi(\epsilon\xi)\hat{f}(\xi)|\leq C|\hat{f}(\xi)|$, hvor $C=\sup_\xi|\psi(\xi)|$. Derudover er $\hat{\psi}(z)f(x+\epsilon z)\to\hat{\psi}(z)f(x)$, med $|\hat{\psi}(z)f(x+\epsilon z)|\leq C'|\hat{\psi(z)},$ hvor $C'=\sup_y|f(y)|$. Sættes $\psi(\xi)=e^{-\laengde{\xi}^2/2}$ fås $\psi(0)=1$, $\hat{\psi}(z)=(2\pi)^{k/2}e^{-\laengde{z}^2/2}$ og $\int\hat{\psi(z)}\,dz=(2\pi)^k.$
 \end{proof}
+
+\chapter*{Målteori og stokastiske processer}
+\section*{1. Målelige rum, målelige funktioner og integration.}
+\begin{definition}
+	Et par $(X,\FI)$ hvor $X$ er en mængde og $\FI$ er en $\sigma$-algebra på $X$ kaldes et {\bf måleligt rum}. De delmængder af $X$ som ligger i $\FI$ kaldes  {\bf $\FI$-målelige mængder.}
+\end{definition}
+\begin{definition}
+	Et endeligt mål $\mu$ på et måleligt rum $(X,\mu)$ er en afbildning
+	\[\mu \colon \FI \to \RR_+, \]
+	sådan, at
+	\begin{enumerate}
+		\item $ \mu (A) \geq 0, \forall A \in \FI .$
+		\item $ \mu(\emptyset)=0. $
+		\item Hvis $A_n \in \FI \forall n=1,2,\dots$ og $A_i \Cap A_j = \emptyset$ for $i\neq j,$ så gælder
+		\[ \mu \left( \bigcup^\infty_{n=1}A_n \right)=\sum\limits_{n=1}^{\infty}\mu \left( A_n \right) \]
+	\end{enumerate}
+\end{definition}
+\begin{definition}
+	Et {\bf målrum} er en trio $(X,\FI,\mu)$, hvor $\mu$ er et mål på $(X,\FI)$.
+\end{definition}
+\begin{definition}
+	En funktion $f(x) \colon X\to \RR$ er $\FI$-målelig, hvis der for ethvert interval $I\in \RR$ gælder, at $f^{-1}\in \FI$.
+\end{definition}
+\begin{definition}
+	For en simpel funktion er integralet defineret ved
+	\[ \int_{X} f(x)d\mu(x)=\lim\limits_{n} \int_{X}f_n(x)d\mu(x).\]
+\end{definition}
+
+Der udføres hand-waving om integration: Indikatorfunktion $\Rightarrow$ Simpel funktion $\Rightarrow$ $\FI$-målelig funktion.
+
+\begin{theorem}[Monoton konvergenssætning]
+	Lad $\left\{ f_n \right\}_{n=1}^\infty$ være en følge af målelige funktioner, sådan at $f_n(x)\uparrow f(x)$ og $f_n(x)\geq 0$. Defineres $f(x)= \lim\limits_{n}f_n(x)$, så gælder det at
+	\[ \int_X f(x)d\mu (x)=\lim\limits_{n}\int_X f_n(x)d\mu (x).\]
+\end{theorem}
+\begin{proof}
+	Da $\int_X f_n(x)d\mu(x)$ er voksende, konvergerer den mod $\alpha \in [0,\infty]$. Vælg den simple funktion $s(x)$ således, at $s(x)\leq f(x) \forall x$ og $c\in ]0,1[$.
+	
+	\bigskip
+	
+	Definér $E_n=\{x|f_n(x)>cs(x)\}$, altså gælder det, at $E_n\uparrow X$'
+	
+	\bigskip
+	
+	\[\int_X f_n(x)d\mu(x)\geq \int_{E_n}f_n(x)d\mu(x) \geq \int_{E_n}cs(x)d\mu(x)=c\phi(E_n).\]
+	Lad $n\to \infty$, så ved vi, da $\mu (A_n)\uparrow\mu(A)$ når $A_n\uparrow A$ og $n\to \infty$, at 
+	\[ \alpha=\lim\limits_{n\to\infty}\int_X f_n(x)d\mu(x)\geq c\phi(x)=c\int_Xs(x) d\mu(x) \]
+	Når så $c\to 1$, medfører det, at
+	\[ \alpha \geq \int_X s(x) d\mu(x), \]
+	altså $s(x)\to f(x)$ hvilket medfører, at
+	\[ \alpha \geq \int_X f(x) d\mu. \]
+\end{proof}
+\newpage
+
+\section*{2. Produktmål og Fubinis sætning.}
+Først snakkes lidt løst om produktmål
+
+\bigskip
+
+\begin{minipage}[c]{\linewidth}
+	\centering
+	\includegraphics[scale=0.15,angle=270]{IMG_1}\captionof{figure}{\footnotesize Det kunne sikkert tegnes pænere.}\label{fig:prodspace}
+\end{minipage}\\[0.7 em]
+
+Så præsenteres \href{https://en.wikipedia.org/wiki/Pi_system}{$\pi$-systemer}, som er lukkede under fællesmængde og \href{https://en.wikipedia.org/wiki/Dynkin_system}{$\lambda$-systemer} som er lukkede under komplementær og forening af disjunkte mængder, ydermere står der i mine noter at $\FI$, $\sigma$-algebra $\iff$ $\FI$ er et $\pi$-system og $\FI$ er et $\lambda$-system. 
+
+\begin{theorem}[Dynkins $\pi$ - $\lambda$ sætning]\label{th:dynkin}
+	Antag $\PI$ er et $\pi$-system og $\L$ er et $\lambda$-system. Hvis $\PI \subset \L$ så er $\sigma(\PI)\subset\L$
+\end{theorem}
+\begin{theorem}\label{th:s2}
+	Hvis $E\in \FI \otimes \G$ så gælder for alle $y$ at $\{ x|(x,y)\in E \}\in \FI$ og for alle $x$ at $\{ y|(x,y)\in E \}\in \G$. Hvis $f$ er målelig $\FI \otimes \G$, så $f(x,\cdot)\in \G$ og $f(\cdot,y)\in \FI$. Se eventuelt figur \ref{fig:prodspace}
+\end{theorem}
+\begin{theorem}
+	Der eksisterer et unikt mål $\lambda$ på $\{ X \times Y, \FI \otimes \G \}$ sådan, at
+	\[ \lambda(A\times B)=\mu(A)\cdot\nu(B). \]
+	for ethvert måleligt rektangel $A \times B$. Dette mål kaldes {\bf produktmål} og benævnes $\lambda=\mu\times\nu$.
+\end{theorem}
+\begin{proof}
+	Dette er ikke et rigtigt bevis, men lidt derhenad. Vi viser kun for $\mu$ og $\nu$ endelige. Fra sætning \ref{th:s2} ses at $g_E(x)=\nu (\{ y|(x,y)\in E \})$ er en veldefineret funktion af $x$. Hvis $\L$ er klassen af de $E\in \FI \otimes \G$, som opfylder at $g_E(x)$ er målelig $\FI$ så er $\L$ et $\lambda$-system, som indeholder alle målelige rektangler (et $\pi$-system) og derfor ud fra sætning \ref*{th:dynkin} er lig med $\FI \otimes \G$. Derfor kan vi definere et mål $\pi'$
+	\[ \pi'(E)=\int_X g_E(x)d\mu(x)=\int_X \nu(\{ y|(x,y)\in E \})d\mu(x) \]
+	og med samme argumentation kan vi definere
+	\[ \pi''(E)=\int_X \mu(\{ x|(x,y)\in E \})d\nu(y). \]
+	For målelige rektangler $A\times B$ ses det let, at
+	\[ \pi'(A\times B) = \pi''(A\times B) = \pi(A)\nu(B). \]
+	Hvis vi igen definerer $\L_0$ som klassen af alle $E$, hvor $\pi'(E) =\pi''(E)$, så har vi igen et $\lambda$-system som indeholder de målelige rektangler og som således indeholder $\FI \otimes \G$. Produktmålet er således defineret ved $\lambda(A)=\pi'(A)=\pi''(A)$.
+\end{proof}
+\begin{theorem}[Fubinis sætning]
+	Betragt produktmålsrummet $\{ X\times Y, \FI \otimes \G,\mu \times \nu \}$ og lad $f\colon X\times Y\to \RR$ være en målelig afbildning. Antag enten at $f$ er integrabel over $X\times Y$ eller at $f$ er ikke negativ, så har vi at
+	\[ \int_{X\times Y}fd(\mu \times \nu)=\int_X \left[ \int_Y f(x,y)d\nu(y) \right]d\mu(x)=\int_Y\left[ \int_X f(x,y)d\mu(x) \right]d\nu(y). \]
+\end{theorem}
+\begin{proof}
+	Dette er helle rikke rigtigt et bevis. Hvis vi definerer $f(x,y)=I_{\{ (x,y)\in E \}}$, så ses det let at de to sidste udtryk i ligheden svarer til $\pi'(E)=\pi''(E)$, hvilket følger af ovenstående. Dernæst følger resultatet let for simple funktioner. For ikke negative funktioner $f$ følger resultatet ved at tilnærme $f$ med en voksende følge af simple funktioner og anvende monoton konvergens sætningen. For generelle $f$ følger resultatet ved standardopsplitning i $f^+$ og $f^-$.
+	
+	Resultatet i sætning \ref{th:s2} kan også udvides til at for ikke negative $f$ er
+	\[ \int_Y f(x,y)d\mu, \int_Xf(x,y)d\nu \]
+	målelige hhv mht $\FI$ og $\G$.
+\end{proof}
+\newpage
+\section*{3. Radon Nikodyms sætning og ækvivalente sandsynlighedsmål.}
+
+
+\newpage
+
+\section*{4. Stokastiske variable og betingede middelværdier.}
+
+
+\newpage
+
+\section*{5. Martingaler og stoppetider.}
+
+
+\newpage
+
+\section*{6. Brownske bevægelser og stokastiske integraler.}
+
+
+\newpage
+
+\section*{7. Stokastiske differentialligninger, diffusioner og Itos formel.}
+
+
+\newpage
+
+\section*{8. Girsanovs Sætning.}
+
 \end{document}
