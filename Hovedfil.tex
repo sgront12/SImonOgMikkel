@@ -718,7 +718,7 @@ Først snakkes lidt løst om produktmål
 	\includegraphics[scale=0.15,angle=270]{IMG_1}\captionof{figure}{\footnotesize Det kunne sikkert tegnes pænere.}\label{fig:prodspace}
 \end{minipage}\\[0.7 em]
 
-Så præsenteres \href{https://en.wikipedia.org/wiki/Pi_system}{$\pi$-systemer}, som er lukkede under fællesmængde og \href{https://en.wikipedia.org/wiki/Dynkin_system}{$\lambda$-systemer} som er lukkede under komplementær og forening af disjunkte mængder, ydermere står der i mine noter at $\FI$, $\sigma$-algebra $\iff$ $\FI$ er et $\pi$-system og $\FI$ er et $\lambda$-system. 
+Så præsenteres \href{https://en.wikipedia.org/wiki/Pi_system}{$\pi$-systemer}, som er lukkede under fællesmængde og \href{https://en.wikipedia.org/wiki/Dynkin_system}{$\lambda$-systemer} som er lukkede under komplementærmængder og forening af disjunkte mængder, ydermere står der i mine noter at $\FI$, $\sigma$-algebra $\iff$ $\FI$ er et $\pi$-system og $\FI$ er et $\lambda$-system. 
 
 \begin{theorem}[Dynkins $\pi$ - $\lambda$ sætning]\label{th:dynkin}
 	Antag $\PI$ er et $\pi$-system og $\L$ er et $\lambda$-system. Hvis $\PI \subset \L$ så er $\sigma(\PI)\subset\L$
@@ -735,9 +735,9 @@ Så præsenteres \href{https://en.wikipedia.org/wiki/Pi_system}{$\pi$-systemer},
 	Dette er ikke et rigtigt bevis, men lidt derhenad. Vi viser kun for $\mu$ og $\nu$ endelige. Fra sætning \ref{th:s2} ses at $g_E(x)=\nu (\{ y|(x,y)\in E \})$ er en veldefineret funktion af $x$. Hvis $\L$ er klassen af de $E\in \FI \otimes \G$, som opfylder at $g_E(x)$ er målelig $\FI$ så er $\L$ et $\lambda$-system, som indeholder alle målelige rektangler (et $\pi$-system) og derfor ud fra sætning \ref*{th:dynkin} er lig med $\FI \otimes \G$. Derfor kan vi definere et mål $\pi'$
 	\[ \pi'(E)=\int_X g_E(x)d\mu(x)=\int_X \nu(\{ y|(x,y)\in E \})d\mu(x) \]
 	og med samme argumentation kan vi definere
-	\[ \pi''(E)=\int_X \mu(\{ x|(x,y)\in E \})d\nu(y). \]
+	\[ \pi''(E)=\int_Y \mu(\{ x|(x,y)\in E \})d\nu(y). \]
 	For målelige rektangler $A\times B$ ses det let, at
-	\[ \pi'(A\times B) = \pi''(A\times B) = \pi(A)\nu(B). \]
+	\[ \pi'(A\times B) = \pi''(A\times B) = \mu(A)\nu(B). \]
 	Hvis vi igen definerer $\L_0$ som klassen af alle $E$, hvor $\pi'(E) =\pi''(E)$, så har vi igen et $\lambda$-system som indeholder de målelige rektangler og som således indeholder $\FI \otimes \G$. Produktmålet er således defineret ved $\lambda(A)=\pi'(A)=\pi''(A)$.
 \end{proof}
 \begin{theorem}[Fubinis sætning]
@@ -753,13 +753,136 @@ Så præsenteres \href{https://en.wikipedia.org/wiki/Pi_system}{$\pi$-systemer},
 \end{proof}
 \newpage
 \section*{3. Radon Nikodyms sætning og ækvivalente sandsynlighedsmål.}
+\begin{definition}
+	Betragt et måleligt rum $(X,\FI)$, hvorpå der er defineret to seperate mål $\mu$ og $\nu$
+	\begin{itemize}
+		\item Hvis det for alle $A\in \FI$ holder, at
+		\[ \mu(A)=0 \Rightarrow\nu(A)=0, \]
+		så siges $\nu$ at være {\bf absolut konvergent} med hensyn til $\mu$ på $\FI$, benævnes $\nu \ll \mu$.
+		\item Hvis det både gælder at $\mu \ll \nu$ og $\nu \ll \mu$, så siges $\mu$ og $\nu$ at være {\bf ækvivalente}, benævnes $\mu \tilde \nu$.
+		\item Hvis der eksisterer to udfald, $A$ og $B$ sådan at
+		\begin{itemize}
+			\item $A\cap B=\emptyset$
+			\item $\mu(B)=0$, og $\nu(A)=0$.
+		\end{itemize}
+		Siges $\mu$ og $\nu$ at være gensidige {\bf singulære}, benævnes $\mu \perp \nu$.
+		
+	\end{itemize}
+\end{definition}
+
+\begin{theorem}[Radon-Nikodym sætningen]
+	 Betragt et målrum $(X,\FI,\mu)$, hvor vi antager at $\mu$ er endeligt, altså at  $\mu(X)<\infty$. Antag et der eksisterer et mål $\nu$ på $(X,\FI)$ sådan at $\nu \ll \mu$ på $\FI$. Så eksisterer der en ikke negativ funktion $f\colon X\to \RR$ således at
+	 \[ f \text{ er }\FI\text{-målelig.} \]
+	 \[ \int_X f(x)d\mu(x)<\infty, \]
+	 \[ \nu(A)=\int_A f(x)d\mu(x), \forall A\in \FI .\]
+	 Funktionen $f$ kaldes den {\bf Radon-Nikodym afledte} af $\nu$ med hensyn til $\mu$. Den er unikt defineret $\mu$ næsten overalt, og skrives
+	 \[ f(x)=\frac{d\nu(x)}{d\mu(x)}, \]
+	 eller alternativt
+	 \[ d\nu(x)=f(x)d\mu(x). \]
+\end{theorem}
+\begin{proof}[fra bogen]
+	Vi skitsrer et bevis, og det er åbenbart \href{https://en.wikipedia.org/wiki/John_von_Neumann}{von Neumanns} skyld. Definer et nyt mål $\lambda$ ved at sætte $\lambda(A) = \mu(A)+\nu(A)$, for alle $A\in \FI$. For ethvert $g\in L^2(\lambda)$ kan vi definere en lineær afbildning $\Phi \colon X \to \RR$ ved
+	\[ \Phi(g)=\int_Xg(x)d\nu(x), \]
+	og fro trekant og Cauchy-Schwarz ulighederne har vi, at
+	\[ |\Phi(g)|=\left\vert \int_X gd\nu\right\vert \leq \int_X |g|d\nu \leq \int_X |g|d\lambda \leq \sqrt{\lambda(X)}\cdot ||g||_{L^2(\lambda)}. \] 
+	Så har vi fra Reiz's repræsentationssætning at der eksisterer en $f\in L^2(\lambda)$ sådan at $\Phi(g)=(g,f)$ for alle $g\in L^2(\lambda)$, altså
+	\begin{equation}
+		\int_X gd\nu=\int_X gfd\nu, \forall g\in L^2(\lambda).\label{eq:A14}
+	\end{equation}
+	Ved at vælge $g=I_A$ for et tilfældigt $A\in \FI$, har vi grundet $0\leq \nu(A)\leq\lambda(A)$, at $0\leq f \leq 1$. Vi kan nu skrive ligning \ref{eq:A14} som
+	\[ \int_Xgd\nu=\int_X gfd\nu+\int_X gfd\mu, \]
+	eller
+	\begin{equation}
+		\int_X g(1-f)d\nu=\int_X gfd\mu, \forall g\in L^2(\lambda). \label{eq:A15}
+	\end{equation}
+	Da dette holder for alle $g\in L^2(\lambda)$ og i særdeleshed for alle indikatorfunktioner kan vi skrive dette på "differential form" (der refereres stil opgaverne, for at retfærdiggøre dette)
+	\[ (1-f)d\nu=fd\mu. \]
+	Det ville her være fristende at gange igennem med $(1-f)^{-1}$ for at få
+	\[ d\nu=\frac{f}{1-f}d\mu, \]
+	for så at definere den Radon-Nikodym afledte som $\frac{f}{(1-f)}$, men her kommer vi selvfølgelig i problemer når $f=1$. Definer derfor $A$ ved $A=\{ x\in X;f(x)=1 \}$, og sæt $g=I_A$. Så får vi fra \ref{eq:A15}, at
+	\[ \int_A fd\mu=\int_A(1-f)d\nu=0, \]
+	og da $f\geq 0$, er $\mu(A)=0$. Vi bruger nu antagelsen om at $\nu\iiiint\mu$ til at udlede at også $\nu(A)=0$, altså kan vi sagtens skrive
+	\[ d\nu=\frac{f}{1-f}d\mu, \]
+	og vi ser at den Radon-Nikodym afledede faktisk er givet ved
+	\[ \frac{d\nu}{d\mu}=\frac{f}{1-f}.\]
+\end{proof}
+\begin{proof}[fra noter]
+	 Antag $\mu,\nu$ er endelige (de skal egentligt være $\sigma$-endelige, men det viser vi ikke for)
+	 Definer et nyt mål $\lambda\colon\lambda(A) = \mu(A)+\nu(A)$,  $g\in L^2(\lambda)$.
+	 Definer $\Phi \colon L^2(\lambda) \to \RR$ sådan at
+	\[ \Phi(g)=\int_Xg(x)d\nu(x), \]
+	\begin{align*}
+		|\Phi(g(x))|=&\left\vert \int_X g(x)d\nu(x)\right\vert \leq \int_X |g(x)|d\nu(x) \leq \int_X |g(x)|d\lambda(x)\\
+		=&\int_X \sqrt{g(x)-1}^2d\lambda(x)\leq \sqrt{\int_X 1 d\lambda(x)}\sqrt{g^2(x)d\lambda(x)}\\
+		=&\sqrt{\lambda(x)}\cdot ||g(x)||_{L^2(\lambda)}=K||g(x)||_{L^2(\lambda)}
+	\end{align*}
+	dermed er $\Phi$ en begrænset operator, så der findes en funktion $f$ så (grundet Riez's repræsentations sætning)
+	\[ \Phi(g)= \langle f,g \rangle_{L^2(\lambda)}=\int_X fgd\lambda \]
+	\[ \int_Xgd\mu=\int_X f\cdot g d\lambda \]
+	
+	
+	$g=I_A$
+	\[\int_A d\nu=\int_A fd\lambda = \int_A fd\nu+\int_A fd\mu \geq \int_A f d\nu \Rightarrow f\leq 1\]
+	\begin{align*}
+		&\int_X g d \nu=\int_Xfgd\nu+\int_Xfgd\mu\\
+		\Rightarrow&\int_X g(1-f)d\nu=\int_Xfgd\mu\\
+		\Rightarrow&\int_Xg(1-f)d\nu=\int_Xg(1-f)\frac{f}{1-f}d\mu\\
+		\Rightarrow&\frac{d\nu}{d\mu}=\frac{f}{1-f}
+	\end{align*}
+	det fucker up når $f=1$
+	
+	$A=\{ x |f(x)=1 \}$
+	\[ \int_A d\nu =\int_A f d \nu +\int_A fd\mu \]
+	\[ \int_A 1-f d\nu=\int_A fd \mu \Rightarrow\int_A 0 d\nu = \int_A 1d\mu \Rightarrow0=\mu(A)\Rightarrow\nu(A)=0 \]
+	da $\nu\ll\mu$
+\end{proof}
+Et lille eksempel:
+
+	Det er vigtigt at forstå konceptet om at absolut kontinuitet er defineret relativt til en given $\sigma$-algebra. Hvis eksempelvis $\G \subseteq\FI$ kan det meget vel være at $\mu\ll\nu$ på $\G$ samtidig med, at det ikke holder at $\mu\ll\nu$ på $\FI$. Et trivielt eksempel gives ved at sætte $X=\{1,2,3\} $ og definere
+	\[ \FI=2^X, \G=\{X,\emptyset,\{1\},\{2,3\}\} \]
+	og
+	\begin{align*}
+		\mu(1)=&2, \mu(2)=&0, \mu(3)=&2\\
+		\nu(1)=&8, \nu(2)=&5, \nu(3)=&13. 
+	\end{align*}
+	Her er det indlysende at vi IKKE har $\nu\ll\mu$ på $\FI$, da $\mu(2)=0$ samtidig med, at $\nu(2)\neq 0$. Vi har dog, at $\nu\ll\mu$ på $\G$, med Radon-Nikodym afledet givet ved
+	\[f\left( x \right) = \left\{ \begin{gathered}
+	4\hfill ~~for\,\, n=1 \\
+	9\hfill ~~for\,\, n=2 \\
+	9\hfill ~~for\,\, n=3 
+	\end{gathered}  \right.\]
+Bemærk i øvrigt at $f$ er $\G$-målelig.
+
+Det ses at hvis vi udvider en $\sigma$-algebra kan vi miste den absolutte kontinuitet, men hvis  $\nu\ll\mu$ på et måleligt rum $(X,\FI)$ og $\G\subseteq\FI$, så gælder det også at $\nu\ll\mu$ på $\G$.
+
+Så skal der med udgangspunkt i eksemplet forklares om ækvivalente sandsynlighedsmål, noget som er beskrevet i B6 side 500
+
 
 
 \newpage
 
 \section*{4. Stokastiske variable og betingede middelværdier.}
+Det vi kunne tænke os er en brugbar definition af objektet
+\[ E[X|\G], \]
+hvor $X$ er en stokastisk variabel og $\G$ er en 	$\sigma$-algebra inkluderet i $\FI$. Fortolkningen skulle gerne være, at $E[X|\G]$ er "forventningen (middelværdien) af $X$ givet at vi har adgang til informationen i $\G$". Det er ikke trivielt at formalisere denne let flygtige beskrivelse, så vi starter med en logisk tankerække.
 
+Vi starter med den ubetingede middelværdi givet ved
+\[ E[X]=\int_{\Omega}X(\omega)P(d\omega), \]
+altså er $E[X]$ et vægtet gennemsnit af værdier af $X$, hvor vi har brugt sandsynlighederne $P(d\omega)$ som vægte.
 
+Antag nu at vi har skaffet oplysninger om det stokastiske eksperiment, i det omfang at vi ved, at stikprøven $\omega$ ligger i mængden $B$. Den naturlige definition af den forventede værdi af $X$ givet $B$ findes nu gennem det vægtede gennemsnit af $X$ over det nye effektive udfaldsrum $B$. Vi skal selvfølgelig normalisere sandsynlighedsmålet så vi har total masse lig med forening på det nye rum $B$. Derfor normaliserer vi sandsynlighederne som 
+\[ \frac{P(d\omega)}{P(B)}, \]
+og vi kan nu definere objektet $E[X|B]$.
+\begin{definition}
+	Antag $B\in \FI$ med $P(B)>0$, og at $X\in L^1(\Omega,\FI,P)$. Så er "den betingede middelværdi af $X$ givet $B$"  defineret ved
+	\[ E[X|B]=\frac{1}{P(B)}\int_B X(\omega)dP(\omega).\]
+\end{definition}
+\begin{theorem}
+	Det er jeg ikke helt sikker på...
+\end{theorem}
+\begin{proof}
+	content...
+\end{proof}
 \newpage
 
 \section*{5. Martingaler og stoppetider.}
