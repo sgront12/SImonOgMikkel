@@ -39,6 +39,7 @@
 \usepackage{framed}
 \usepackage{etoolbox}
 \usepackage{enumitem}
+\usepackage{dsfont}
 \usepackage[framed,amsmath,thmmarks]{ntheorem}
 %Diverse Envirronments
 
@@ -80,6 +81,7 @@
 \newcommand{\RR}{\mathbb{R}}
 \newcommand{\EE}{\mathbb{E}}
 \newcommand{\FF}{\mathbb{F}}
+\newcommand{\Q}{\mathcal{Q}}
 \newcommand{\ts}{\tilde{\sigma}}
 \newcommand{\FS}{\mathcal{S}}
 \newcommand{\tps}{T_p\FS}
@@ -89,6 +91,7 @@
 \newcommand{\FI}{\mathcal{F}}
 \newcommand{\PI}{\mathcal{P}}
 \newcommand{\FII}{\mathcal{F}_{II}}
+\newcommand{\FIU}{\underline{\mathcal{F}}}
 \newcommand{\M}{\mathcal{M}^+}
 \renewcommand{\L}{\mathcal{L}}
 \newcommand{\K}{\mathbb{K}}
@@ -97,6 +100,7 @@
 \newcommand{\GII}{\Gamma_{12}}
 \newcommand{\GIII}{\Gamma_{22}}
 \newcommand{\laengde}[1]{\lvert|#1\rvert|}
+\newcommand{\1}{\mathds{1}}
 \DeclareMathOperator{\tr}{trace}
 \DeclareMathOperator{\inte}{int}
 \DeclareMathOperator{\spa}{span}
@@ -759,7 +763,7 @@ Så præsenteres \href{https://en.wikipedia.org/wiki/Pi_system}{$\pi$-systemer},
 		\item Hvis det for alle $A\in \FI$ holder, at
 		\[ \mu(A)=0 \Rightarrow\nu(A)=0, \]
 		så siges $\nu$ at være {\bf absolut konvergent} med hensyn til $\mu$ på $\FI$, benævnes $\nu \ll \mu$.
-		\item Hvis det både gælder at $\mu \ll \nu$ og $\nu \ll \mu$, så siges $\mu$ og $\nu$ at være {\bf ækvivalente}, benævnes $\mu \tilde \nu$.
+		\item Hvis det både gælder at $\mu \ll \nu$ og $\nu \ll \mu$, så siges $\mu$ og $\nu$ at være {\bf ækvivalente}, benævnes $\mu \sim \nu$.
 		\item Hvis der eksisterer to udfald, $A$ og $B$ sådan at
 		\begin{itemize}
 			\item $A\cap B=\emptyset$
@@ -781,13 +785,13 @@ Så præsenteres \href{https://en.wikipedia.org/wiki/Pi_system}{$\pi$-systemer},
 	 \[ d\nu(x)=f(x)d\mu(x). \]
 \end{theorem}
 \begin{proof}[fra bogen]
-	Vi skitsrer et bevis, og det er åbenbart \href{https://en.wikipedia.org/wiki/John_von_Neumann}{von Neumanns} skyld. Definer et nyt mål $\lambda$ ved at sætte $\lambda(A) = \mu(A)+\nu(A)$, for alle $A\in \FI$. For ethvert $g\in L^2(\lambda)$ kan vi definere en lineær afbildning $\Phi \colon X \to \RR$ ved
+	Vi skitserer et bevis, og det er åbenbart \href{https://en.wikipedia.org/wiki/John_von_Neumann}{von Neumanns} skyld. Definer et nyt mål $\lambda$ ved at sætte $\lambda(A) = \mu(A)+\nu(A)$, for alle $A\in \FI$. For ethvert $g\in L^2(\lambda)$ kan vi definere en lineær afbildning $\Phi \colon X \to \RR$ ved
 	\[ \Phi(g)=\int_Xg(x)d\nu(x), \]
 	og fro trekant og Cauchy-Schwarz ulighederne har vi, at
 	\[ |\Phi(g)|=\left\vert \int_X gd\nu\right\vert \leq \int_X |g|d\nu \leq \int_X |g|d\lambda \leq \sqrt{\lambda(X)}\cdot ||g||_{L^2(\lambda)}. \] 
 	Så har vi fra Reiz's repræsentationssætning at der eksisterer en $f\in L^2(\lambda)$ sådan at $\Phi(g)=(g,f)$ for alle $g\in L^2(\lambda)$, altså
 	\begin{equation}
-		\int_X gd\nu=\int_X gfd\nu, \forall g\in L^2(\lambda).\label{eq:A14}
+		\int_X gd\nu=\int_X gfd\lambda, \forall g\in L^2(\lambda).\label{eq:A14}
 	\end{equation}
 	Ved at vælge $g=I_A$ for et tilfældigt $A\in \FI$, har vi grundet $0\leq \nu(A)\leq\lambda(A)$, at $0\leq f \leq 1$. Vi kan nu skrive ligning \ref{eq:A14} som
 	\[ \int_Xgd\nu=\int_X gfd\nu+\int_X gfd\mu, \]
@@ -801,7 +805,7 @@ Så præsenteres \href{https://en.wikipedia.org/wiki/Pi_system}{$\pi$-systemer},
 	\[ d\nu=\frac{f}{1-f}d\mu, \]
 	for så at definere den Radon-Nikodym afledte som $\frac{f}{(1-f)}$, men her kommer vi selvfølgelig i problemer når $f=1$. Definer derfor $A$ ved $A=\{ x\in X;f(x)=1 \}$, og sæt $g=I_A$. Så får vi fra \ref{eq:A15}, at
 	\[ \int_A fd\mu=\int_A(1-f)d\nu=0, \]
-	og da $f\geq 0$, er $\mu(A)=0$. Vi bruger nu antagelsen om at $\nu\iiiint\mu$ til at udlede at også $\nu(A)=0$, altså kan vi sagtens skrive
+	og da $f\geq 0$, er $\mu(A)=0$. Vi bruger nu antagelsen om at $\nu\ll\mu$ til at udlede at også $\nu(A)=0$, altså kan vi sagtens skrive
 	\[ d\nu=\frac{f}{1-f}d\mu, \]
 	og vi ser at den Radon-Nikodym afledede faktisk er givet ved
 	\[ \frac{d\nu}{d\mu}=\frac{f}{1-f}.\]
@@ -863,19 +867,19 @@ Så skal der med udgangspunkt i eksemplet forklares om ækvivalente sandsynlighe
 
 \section*{4. Stokastiske variable og betingede middelværdier.}
 Det vi kunne tænke os er en brugbar definition af objektet
-\[ E[X|\G], \]
-hvor $X$ er en stokastisk variabel og $\G$ er en 	$\sigma$-algebra inkluderet i $\FI$. Fortolkningen skulle gerne være, at $E[X|\G]$ er "forventningen (middelværdien) af $X$ givet at vi har adgang til informationen i $\G$". Det er ikke trivielt at formalisere denne let flygtige beskrivelse, så vi starter med en logisk tankerække.
+\[ \EE[X|\G], \]
+hvor $X$ er en stokastisk variabel og $\G$ er en 	$\sigma$-algebra inkluderet i $\FI$. Fortolkningen skulle gerne være, at $\EE[X|\G]$ er "forventningen (middelværdien) af $X$ givet at vi har adgang til informationen i $\G$". Det er ikke trivielt at formalisere denne let flygtige beskrivelse, så vi starter med en logisk tankerække.
 
 Vi starter med den ubetingede middelværdi givet ved
-\[ E[X]=\int_{\Omega}X(\omega)P(d\omega), \]
-altså er $E[X]$ et vægtet gennemsnit af værdier af $X$, hvor vi har brugt sandsynlighederne $P(d\omega)$ som vægte.
+\[ \EE[X]=\int_{\Omega}X(\omega)P(d\omega), \]
+altså er $\EE[X]$ et vægtet gennemsnit af værdier af $X$, hvor vi har brugt sandsynlighederne $P(d\omega)$ som vægte.
 
 Antag nu at vi har skaffet oplysninger om det stokastiske eksperiment, i det omfang at vi ved, at stikprøven $\omega$ ligger i mængden $B$. Den naturlige definition af den forventede værdi af $X$ givet $B$ findes nu gennem det vægtede gennemsnit af $X$ over det nye effektive udfaldsrum $B$. Vi skal selvfølgelig normalisere sandsynlighedsmålet så vi har total masse lig med forening på det nye rum $B$. Derfor normaliserer vi sandsynlighederne som 
 \[ \frac{P(d\omega)}{P(B)}, \]
-og vi kan nu definere objektet $E[X|B]$.
+og vi kan nu definere objektet $\EE[X|B]$.
 \begin{definition}
 	Antag $B\in \FI$ med $P(B)>0$, og at $X\in L^1(\Omega,\FI,P)$. Så er "den betingede middelværdi af $X$ givet $B$"  defineret ved
-	\[ E[X|B]=\frac{1}{P(B)}\int_B X(\omega)dP(\omega).\]
+	\[ \EE[X|B]=\frac{1}{P(B)}\int_B X(\omega)dP(\omega).\]
 \end{definition}
 \begin{theorem}
 	Det er jeg ikke helt sikker på...
@@ -886,13 +890,67 @@ og vi kan nu definere objektet $E[X|B]$.
 \newpage
 
 \section*{5. Martingaler og stoppetider.}
+\begin{definition}[Filtrering]
+	Givet et sandsynlighedsrum $(\Omega, \FI, P)$ er en \textbf{filtrering} en indekseret følge af $\sigma$-algebraer $\left\{ \FI_t \right\}_{t\geq 0}$,  benævnes $\FIU$, hvorom det gælder:
+	\begin{enumerate}
+		\item $\FI_t \in \FI \forall t$
+		\item $s<t \Rightarrow \FI_s^X\subset \FI_t^X$
+	\end{enumerate}
+	Med en sådan filtrering har vi et filtreret sandsynlighedsrum $(\Omega, \FI, P,\FIU)$
+\end{definition}
 
+\begin{definition}[Tilpasset]
+	$X$ er \textbf{$\FIU$-tilpasset} hvis $X_t\in\FI_t$
+\end{definition}
+
+\begin{definition}[Martingale]
+	Givet et filtreret sandsynlighedsrum $(\Omega, \FI, P,\FIU)$ er den stokastiske process $X$ et \textbf{martingale} hvis:
+	\begin{enumerate}
+		\item $X$ er $\FIU$-telpassr
+		\item $X_t\in L^1 \forall t$
+		\item $\forall s \& t$ når $0\leq s \leq t$ er $X_s=\EE[X_t\vert \FI_s]$, $P$ n.s.
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}[Kvadratintegrabelt martingale]
+	Hvis $\EE \left[ X_t^2 \right]\leq M \forall t,t\in[ 0,\infty [$, siges $X$ at værre \textbf{kvadratintegrabel}
+\end{definition}
+
+\begin{theorem}[Martingal konvergens]
+	Antag $X$ er kvadratintegrabel, så eksisterer $X_\infty$ hvorom det gælder, at $X_t\to X_\infty$ i $L^2$ og $P$ n.o., når $t\to \infty$.
+	Ydermere gælder det at $X_t=\EE[ X_\infty\vert\FI_t ]\forall t\geq 0$.
+\end{theorem}
+\begin{proof}
+	content...
+\end{proof}
+\begin{definition}[Stoppetid]
+	En stoppetid er en stokastisk variabel...
+\end{definition}
 
 \newpage
 
 \section*{6. Brownske bevægelser og stokastiske integraler.}
-
-
+\begin{definition}[Wienerprocess]
+	En wienerprocess $W$ er en stokastisk process som opfylder, at:
+	\begin{enumerate}
+		\item $W(0)=0$
+		\item Uafhængige intervaller: $r<s\leq t < u\Rightarrow W(u)-W(t) \& W(s)-W(r)$ er uafhængige stokastiske variable.
+		\item For $s<t \Rightarrow W(t)-W(s)\sim N(0,\sigma), \sigma=\sqrt{(t-s)}$
+	\end{enumerate}
+\end{definition}
+\begin{definition}[Geometrisk Brownsk bevægelse (GBM)]
+	content...
+\end{definition}
+stok int intro
+\begin{definition}[Stokastisk integrale]
+	content...
+\end{definition}
+\begin{theorem}
+	content...
+\end{theorem}
+\begin{proof}
+	content...
+\end{proof}
 \newpage
 
 \section*{7. Stokastiske differentialligninger, diffusioner og Itos formel.}
@@ -901,5 +959,63 @@ og vi kan nu definere objektet $E[X|B]$.
 \newpage
 
 \section*{8. Girsanovs Sætning.}
+
+\begin{theorem}[Girsanovs Sætning]
+	Betragt det filtrerede målrum $(\Omega ,\FI,P,\FIU)$, og intervallet $[0,T]$. Lad $W^P=\left\{ W^P_{(t)} \right\}$ være en wienerproces med hensyn til $(P,\FI)$. Lad $\left\{ \phi_{(s)} \right\}$ være $\FI$-tilpasset. Definer$L=\{ L(t) \}$ ved:
+	\begin{enumerate}[label=(\alph*)]
+		\item \[dL(t)=L(t)\phi(t)dW^P(t)\] \[ LW=1 \] Vi antager $\EE[L(t)]=1.$ Så definerer vi mål $\Q$ på $\FI_T$ da $d\Q =L_T dP$ så gælder at
+		\item $d W^P(t)=\phi(t)dt +dW^\Q(t)$, hvor $\{W^\Q(t)\}$ er en wienerproces med hensyn til $(\Q,\FI_T)$
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	Vi skal vise at under $\Q$ har vi 
+	\begin{enumerate}
+		\item $W^\Q(0)=0$
+		\item $W^\Q(t)-W^\Q(s)\perp\FI_s$ for alle $s<t$
+		\item $W^\Q(t)-W^\Q(s)\sim N(0,t-s)$ for alle $s<t$ for alle $t$
+	\end{enumerate}
+	$W^\Q(0)=0$ vælges. Hvis vi viser at $\EE^\Q[e^{iu(W^\Q(t)-W^\Q(s)}\vert \FI_s]=e^{-\frac{1}{2}u(t-s)}$ er vi hjemme (med Bjarnes ord).
+	Vi sætter $(s=0)$ så $\EE^\Q[e^{iuW^\Q(t)}]=\EE^P[L_te^{iuW^\Q(t)}]$. Med Ito's formel ($f(x,y)=xy, f_x=y,f_y=x,f_{xy}=f_{yx}=1$)
+	\[ d\left(L_t e^{iuW^\Q(t)}\right)=dL_t e^{iuW^\Q(t)}+L_td\left( e^{iuW^\Q(t)} \right)+dL_t\left( de^{iuW^\Q(t)} \right) \]
+	\[ d\left( e^{iuW^\Q(t)} \right)=iue^{iuW^\Q(t)}dW^\Q(t)+\frac{1}{2}\left(-u^2\right)e^{iuW^\Q(t)}\left(dW^\Q(t)\right)^2 \]
+	\begin{align*}
+		d\left( L_t e^{iuW^\Q(t)} \right)&=e^{iuW^\Q(t)}\Bigg( L(t)\phi(t)dW^P(t)+L(t)\left( iudW^\Q(t)-\frac{u^2}{2}dt  \right)\\		  
+		&+\left( L(t)\phi(t)dW^P(t) \right)\left( iudW^\Q(t)-\frac{u^2}{2}dt \right)\Bigg)\\
+		&=e^{iuW^\Q(t)} L(t) \Bigg( \phi(t)dW^P(t) + iudW^\Q(t)-\frac{u^2}{2}dt\\
+		&+\phi(t)dW^P(t)\left(iudW^\Q(t)-\frac{u^2}{2}dt\right)\Bigg)\\
+		&=e^{iuW^\Q(t)}L(t)\left( \phi(t)dW^P(t)+iudW^\Q(t)-\frac{u^2}{2}dt+iu\phi(t)dt \right)
+	\end{align*}
+	Altså er \[ z(t)=e^{iuW^\Q(t)}L(t) \]
+	og
+	\begin{align*}
+		dz(t)&=z(t)\left( \phi(t)dW^P(t)+iudW^P(t)-iu\phi(t)dt-\frac{u^2}{2}dt+iu\phi(t)dt\right)\\
+		&=z(t)\left( -\frac{u^2}{2}dt+\left( \phi(t)+iu \right)dW^P(t) \right)
+	\end{align*}
+	Så\[ z(t)-z(0)=\int_{0}^{t}-z(s)\frac{u^2}{2}ds+\int_{0}^{t}z(s)\left( \phi(s)+u \right)dW^P(s) \]
+	\[ \phi^\Q(u)=\EE^P[z(t)]=m(t) \]
+	\[\EE[z(t)]-z(0)=-\int_{0}^{t}\EE(z(s))\frac{u^2}{2}ds+\EE\int_{0}^{t}z(s)(\phi(s)+u)dW^P(s)\]
+	\[m(t)=1-\int_{0}^{t}m(s)\frac{u^2}{2}ds\]
+	\[ m(t)=e^{-\frac{u^2}{2}t} \]
+	Vi vil nu vise, at
+	$\EE\left[e^{iu(W^\Q(t)-W^\Q(s))}\vert\FI_s\right] =e^{-\frac{1}{2}u^2(t-s)}$ for $A\in \FI_s$
+	\begin{align*}
+		\int_A \EE\left[  e^{iu(W^\Q(t)-W^\Q(s))}\vert\FI_s\right]d\Q&=\int_A e^{-\frac{1}{2}u^2(t-s)}d\Q\\
+		\EE^\Q\left[ \1[A]e^{iu(W^\Q(T)-W^\Q(s))} \right]&=e^{-\frac{1}{2}u^2(t-s}\Q A\\
+		\EE^P\left[ \1[A]L_t e^{u(W^\Q(T)-W^\Q(s))} \right]&=e^{-\frac{1}{2}u^2(t-s}\Q A
+	\end{align*}
+	Vi ser nu at\[ z(t)=\1[A]e^{-iuW^\Q(s)}L(t)e^{iuW^\Q(t)} \]
+	og $dz(t)=\1[A]e^{-iuW^\Q(s)}d\tilde{z}(t)$ hvor $d\tilde{z}(t)$ er $z(t)$ fra før. Altså er $z(s)=L(s)\1[A]$ og $z(t)=z(s)$ hvilket giver os at
+	\[ z(t)=z(s)\left( e^{-\frac{u^2}{2}(t-s)-\frac{1}{2}\int_{s}^{t}(iu+\phi(v))^2dv+\int_{s}^{t}(iu+\phi(v))dW^P(v)} \right) \]
+	Så
+	\begin{align*}
+		\EE[z(t)]&=\EE^P\left[ z(s)e^{-\frac{u^2}{2}} \right]\\
+		&= \EE^P\left[ L(s)\1[A]e^{-\frac{u^2}{2}} \right]\\
+		&= \EE^\Q\left[ \1[A]e^{-\frac{u^2}{2}} \right]\\
+		&=e^{-\frac{u^2}{2}}\Q A
+	\end{align*}
+
+\end{proof}
+
+
 
 \end{document}
