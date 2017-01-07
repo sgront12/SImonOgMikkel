@@ -150,6 +150,8 @@ $L_p(X,\EE,\mu)$ & Vektorrum, hvor $f\sim g\Leftrightarrow\laengde{f-g}_p=0$.
 
 \newpage
 %\addtocounter{chapter}{1}
+\begin{comment}
+	content...
 \chapter*{Mål- og integrationsteori}
 \section*{1. Monotonisætningen.}
 \begin{theorem}
@@ -659,7 +661,7 @@ Jacobi-determinanten for $\phi$ kan hurtigt udregnes til at give 1. Vi får da:
 \[\int_{\RR^{2k}}e^{-i\xi\cdot (y-x)}\psi(\epsilon\xi)f(y)\,d(\xi,y) = \int_{\RR^{2k}}e^{-i\eta\cdot z}\psi(\eta)f(x+\epsilon z)\,d(\eta,z) = \int_{\RR^k}\hat{\psi}(z)f(x+\epsilon z)\,dz.\]
 Lad $\epsilon=1/n$ og lad  $n\to\infty$, så $\epsilon\to 0$. Dermed vil $e^{i\xi\cdot x}\psi(\epsilon\xi)\hat{f}(\xi)\to\psi(0)e^{i\xi\cdot x}\hat{f}(\xi)$, med $|e^{i\xi\cdot x}\psi(\epsilon\xi)\hat{f}(\xi)|\leq C|\hat{f}(\xi)|$, hvor $C=\sup_\xi|\psi(\xi)|$. Derudover er $\hat{\psi}(z)f(x+\epsilon z)\to\hat{\psi}(z)f(x)$, med $|\hat{\psi}(z)f(x+\epsilon z)|\leq C'|\hat{\psi(z)},$ hvor $C'=\sup_y|f(y)|$. Sættes $\psi(\xi)=e^{-\laengde{\xi}^2/2}$ fås $\psi(0)=1$, $\hat{\psi}(z)=(2\pi)^{k/2}e^{-\laengde{z}^2/2}$ og $\int\hat{\psi(z)}\,dz=(2\pi)^k.$
 \end{proof}
-
+\end{comment}
 \chapter*{Målteori og stokastiske processer}
 \section*{1. Målelige rum, målelige funktioner og integration.}
 \begin{definition}
@@ -683,11 +685,12 @@ Lad $\epsilon=1/n$ og lad  $n\to\infty$, så $\epsilon\to 0$. Dermed vil $e^{i\x
 	En funktion $f(x) \colon X\to \RR$ er $\FI$-målelig, hvis der for ethvert interval $I\in \RR$ gælder, at $f^{-1}\in \FI$.
 \end{definition}
 \begin{definition}
-	For en simpel funktion er integralet defineret ved
+	For en af simple funktioner approksimeret funktion  er integralet defineret ved
 	\[ \int_{X} f(x)d\mu(x)=\lim\limits_{n} \int_{X}f_n(x)d\mu(x).\]
+	når $f_n, n=1,2,...$ og $f_n(x)\uparrow f(x)$
 \end{definition}
 
-Der udføres hand-waving om integration: Indikatorfunktion $\Rightarrow$ Simpel funktion $\Rightarrow$ $\FI$-målelig funktion.
+Der udføres hand-waving om integration: Indikatorfunktion $\Rightarrow$ Simpel funktion $\Rightarrow$ $\FI$-målelig funktion. Vi kan blandt andet approksimere alle $\FI$-målelige funktioner med simple funktioner 
 
 \begin{theorem}[Monoton konvergenssætning]
 	Lad $\left\{ f_n \right\}_{n=1}^\infty$ være en følge af målelige funktioner, sådan at $f_n(x)\uparrow f(x)$ og $f_n(x)\geq 0$. Defineres $f(x)= \lim\limits_{n}f_n(x)$, så gælder det at
@@ -698,17 +701,19 @@ Der udføres hand-waving om integration: Indikatorfunktion $\Rightarrow$ Simpel 
 	
 	\bigskip
 	
-	Definér $E_n=\{x|f_n(x)>cs(x)\}$, altså gælder det, at $E_n\uparrow X$'
+	Definér $E_n=\{x|f_n(x)>cs(x)\}$, altså gælder det, at $E_n\uparrow X$
 	
 	\bigskip
 	
 	\[\int_X f_n(x)d\mu(x)\geq \int_{E_n}f_n(x)d\mu(x) \geq \int_{E_n}cs(x)d\mu(x)=c\phi(E_n).\]
+	Vi har fra et lemma, at $\phi(E_k)$ er et mål.
 	Lad $n\to \infty$, så ved vi, da $\mu (A_n)\uparrow\mu(A)$ når $A_n\uparrow A$ og $n\to \infty$, at 
-	\[ \alpha=\lim\limits_{n\to\infty}\int_X f_n(x)d\mu(x)\geq c\phi(x)=c\int_Xs(x) d\mu(x) \]
+	\[ \alpha=\lim\limits_{n\to\infty}\int_X f_n(x)d\mu(x)\geq c\lim\limits_{n\to\infty}\phi(x)=c\int_Xs(x) d\mu(x) \]
 	Når så $c\to 1$, medfører det, at
 	\[ \alpha \geq \int_X s(x) d\mu(x), \]
 	altså $s(x)\to f(x)$ hvilket medfører, at
-	\[ \alpha \geq \int_X f(x) d\mu. \]
+	\[ \alpha \geq \int_X f(x) d\mu(x). \]
+	da det er trivielt at $\alpha \geq \int_X f(x)d\mu(x)$ er $\alpha = \int_X f(x) d\mu(x)$
 \end{proof}
 \newpage
 
@@ -784,21 +789,38 @@ Så præsenteres \href{https://en.wikipedia.org/wiki/Pi_system}{$\pi$-systemer},
 	 eller alternativt
 	 \[ d\nu(x)=f(x)d\mu(x). \]
 \end{theorem}
-\begin{proof}[fra bogen]
+\begin{proof}
 	Vi skitserer et bevis, og det er åbenbart \href{https://en.wikipedia.org/wiki/John_von_Neumann}{von Neumanns} skyld. Definer et nyt mål $\lambda$ ved at sætte $\lambda(A) = \mu(A)+\nu(A)$, for alle $A\in \FI$. For ethvert $g\in L^2(\lambda)$ kan vi definere en lineær afbildning $\Phi \colon X \to \RR$ ved
 	\[ \Phi(g)=\int_Xg(x)d\nu(x), \]
-	og fro trekant og Cauchy-Schwarz ulighederne har vi, at
-	\[ |\Phi(g)|=\left\vert \int_X gd\nu\right\vert \leq \int_X |g|d\nu \leq \int_X |g|d\lambda \leq \sqrt{\lambda(X)}\cdot ||g||_{L^2(\lambda)}. \] 
+	og fra trekant og Cauchy-Schwarz ulighederne har vi, at
+	\begin{align*}
+		|\Phi(g)|=\left\vert \int_X g(x)d\nu(x)\right\vert &\leq \int_X |g(x)|d\nu(x) \leq \int_X |g(x)|d\lambda(x)\\
+		\int_X |g(x)|d\lambda(x)&\leq^{CS}\sqrt{\int_X\1 d\lambda(x)}\sqrt{\int_X g^2(x)d\lambda(x)}\\
+		 &= \sqrt{\lambda(X)}\cdot ||g||_{L^2(\lambda)}. 
+	\end{align*}
 	Så har vi fra Reiz's repræsentationssætning at der eksisterer en $f\in L^2(\lambda)$ sådan at $\Phi(g)=(g,f)$ for alle $g\in L^2(\lambda)$, altså
 	\begin{equation}
-		\int_X gd\nu=\int_X gfd\lambda, \forall g\in L^2(\lambda).\label{eq:A14}
+		\int_X g(x)d\nu(x)=\int_X g(x)f(x)d\lambda(x), \forall g\in L^2(\lambda).\label{eq:A14}
 	\end{equation}
-	Ved at vælge $g=I_A$ for et tilfældigt $A\in \FI$, har vi grundet $0\leq \nu(A)\leq\lambda(A)$, at $0\leq f \leq 1$. Vi kan nu skrive ligning \ref{eq:A14} som
-	\[ \int_Xgd\nu=\int_X gfd\nu+\int_X gfd\mu, \]
+	Ved at vælge $g=I_A$ for et tilfældigt $A\in \FI$, har vi grundet $0\leq \nu(A)\leq\lambda(A)$, at $0\leq f \leq 1$. 
+	\[ \int_X\1_A(x)d\nu(x)=\int_X f(x)\1_A(x)d\nu(x)\]
+	\[ \nu(A)=\int_A f(x)d\lambda(x)=\int_A f(x)d\nu(x)+\int_A f(x)d\mu(x) \]
+	\[ \nu(A)\geq \int_A f(x) d\nu(x) \Rightarrow f(x) \leq 1 \]
+	
+	Vi kan nu skrive ligning \ref{eq:A14} som
+	\[ \int_Xg(x)d\nu(x)=\int_X g(x)f(x)d\nu(x)+\int_X g(x)f(x)d\mu(x), \]
 	eller
+	\[ \int_Xg(x)d\nu(x)-\int_X g(x)f(x)d\nu(x)=\int_X g(x)f(x)d\mu(x), \]
 	\begin{equation}
-		\int_X g(1-f)d\nu=\int_X gfd\mu, \forall g\in L^2(\lambda). \label{eq:A15}
+		\int_X g(x)(1-f(x))d\nu(x)=\int_X g(x)f(x)d\mu(x), \forall g\in L^2(\lambda). \label{eq:A15}
 	\end{equation}
+	
+	Lad $g$ være en indikatorfunktion
+	\[ (1-f(x))d\nu=f(x)d\mu \]
+	\[ \frac{1-f(x)}{f(x)}=\frac{d\mu}{d\nu} \]
+	\[ \frac{d\nu}{d\mu}=\frac{f(x)}{1-f(x)}\]
+\end{proof}
+	\begin{comment}
 	Da dette holder for alle $g\in L^2(\lambda)$ og i særdeleshed for alle indikatorfunktioner kan vi skrive dette på "differential form" (der refereres stil opgaverne, for at retfærdiggøre dette)
 	\[ (1-f)d\nu=fd\mu. \]
 	Det ville her være fristende at gange igennem med $(1-f)^{-1}$ for at få
@@ -810,6 +832,9 @@ Så præsenteres \href{https://en.wikipedia.org/wiki/Pi_system}{$\pi$-systemer},
 	og vi ser at den Radon-Nikodym afledede faktisk er givet ved
 	\[ \frac{d\nu}{d\mu}=\frac{f}{1-f}.\]
 \end{proof}
+
+	content...
+
 \begin{proof}[fra noter]
 	 Antag $\mu,\nu$ er endelige (de skal egentligt være $\sigma$-endelige, men det viser vi ikke for)
 	 Definer et nyt mål $\lambda\colon\lambda(A) = \mu(A)+\nu(A)$,  $g\in L^2(\lambda)$.
@@ -860,33 +885,58 @@ Bemærk i øvrigt at $f$ er $\G$-målelig.
 Det ses at hvis vi udvider en $\sigma$-algebra kan vi miste den absolutte kontinuitet, men hvis  $\nu\ll\mu$ på et måleligt rum $(X,\FI)$ og $\G\subseteq\FI$, så gælder det også at $\nu\ll\mu$ på $\G$.
 
 Så skal der med udgangspunkt i eksemplet forklares om ækvivalente sandsynlighedsmål, noget som er beskrevet i B6 side 500
-
+\end{comment}
 
 
 \newpage
 
 \section*{4. Stokastiske variable og betingede middelværdier.}
-Det vi kunne tænke os er en brugbar definition af objektet
-\[ \EE[X|\G], \]
-hvor $X$ er en stokastisk variabel og $\G$ er en 	$\sigma$-algebra inkluderet i $\FI$. Fortolkningen skulle gerne være, at $\EE[X|\G]$ er "forventningen (middelværdien) af $X$ givet at vi har adgang til informationen i $\G$". Det er ikke trivielt at formalisere denne let flygtige beskrivelse, så vi starter med en logisk tankerække.
-
-Vi starter med den ubetingede middelværdi givet ved
-\[ \EE[X]=\int_{\Omega}X(\omega)P(d\omega), \]
-altså er $\EE[X]$ et vægtet gennemsnit af værdier af $X$, hvor vi har brugt sandsynlighederne $P(d\omega)$ som vægte.
-
-Antag nu at vi har skaffet oplysninger om det stokastiske eksperiment, i det omfang at vi ved, at stikprøven $\omega$ ligger i mængden $B$. Den naturlige definition af den forventede værdi af $X$ givet $B$ findes nu gennem det vægtede gennemsnit af $X$ over det nye effektive udfaldsrum $B$. Vi skal selvfølgelig normalisere sandsynlighedsmålet så vi har total masse lig med forening på det nye rum $B$. Derfor normaliserer vi sandsynlighederne som 
-\[ \frac{P(d\omega)}{P(B)}, \]
-og vi kan nu definere objektet $\EE[X|B]$.
-\begin{definition}
-	Antag $B\in \FI$ med $P(B)>0$, og at $X\in L^1(\Omega,\FI,P)$. Så er "den betingede middelværdi af $X$ givet $B$"  defineret ved
-	\[ \EE[X|B]=\frac{1}{P(B)}\int_B X(\omega)dP(\omega).\]
-\end{definition}
+%\subsection{Den endelige præsentation}
+Givet et målrum \[(\Omega, \FI, P)\] definerer vi en stokastisk variabel ved den $\FI$-målelige funktion \[ X\colon\Omega \to  \RR,\] middelværdien af en sådan funktion betegnes \[ \EE\left[X\right]=\int_{\Omega} X(\omega)dP(\omega).\] Hvis en stokastiske variabel er betinget af et område $B$, begrænses integralet til $B$ og middelværdien normaliseres med sandsynligheden for at være i $B$, \[ \EE\left[X\vert B\right]=\frac{1}{P(B)}\int_{B} X(\omega)dP(\omega). \]
+Vi betragter nu en opsplitning $\PI=\{A_1,A_2,...,A_n\}$ hvor $A_i$ og $A_j$ er disjunkte, når $i\neq j$. Derudover er $\bigcup\limits_{i=1}^{n} A_i=\Omega$. Middelværdien når der betinges med en opsplitning, kan ses som \[ \EE\left[X\vert \PI\right](\omega)=\sum\limits_{i=1}^{n} \EE\left[X\vert A_i\right]\1_{A_i}(\omega). \]
+\begin{proposition}\label{prop:measurable_if_constant}
+	Givet eg opsplitning $\PI$ og en stokastisk variabel $X\colon \Omega\to\RR$, siges $X$ at være $\sigma(\PI)$-målelig hviss $X$ er konstant på hvert komponent i $\PI$
+\end{proposition}
+Vi definerer nu \[ Z(\omega):=\sum\limits_{i=1}^{n} \EE\left[X\vert A_i\right]\1_{A_i}(\omega), \] hvor vi fra proporsition \ref{prop:measurable_if_constant} har at $Z$ er $\sigma(\PI)$-målelig. Lad $G\in \sigma(\PI)$, så har vi at
+\begin{align*}
+	\int_G ZdP&=\int_G\sum\limits_{i=1}^{n} \EE\left[X\vert A_i\right]\1_{A_i}dP \\
+	&=\int_\Omega\sum\limits_{i=1}^{n} \1_G\EE\left[X\vert A_i\cap G\right]\1_{A_i}dP\\
+	&=\sum\limits_{i=1}^{n} \int_\Omega \1_G\EE\left[X\vert A_i\cap G\right]\1_{A_i}dP\\
+	&=\sum\limits_{i=1}^{n} \int_\Omega \EE\left[X\vert A_i\cap G\right]\1_{A_i\cap G}dP\\
+	&=\sum\limits_{i=1}^{n} \EE\left[X\vert A_i\cap G\right]\int_\Omega \1_{A_i\cap G}dP\\
+	&=\sum\limits_{i=1}^{n} \EE\left[X\vert A_i\cap G\right]P(A_i\cap G)\\
+	&=\sum\limits_{i=1}^{n} \frac{1}{P(A_i\cap G)} \int\limits_{A_i\cap G}XdP~~ P(A_i\cap G)\\
+	&=\sum\limits_{i=1}^{n} \int\limits_{A_i\cap G}XdP=\int_G X dP\\
+\end{align*}
+$\EE\left[ X\vert \G\right]$ defineres til at være den stokastiske variabel $Z$, som opfylder at $Z$ er målelig $\G$ og $\int_G ZdP=\int_G X dP$ for alle $G\in\G$.
 \begin{theorem}
-	Det er jeg ikke helt sikker på...
+	Denne eksisterer altid og er unik!
 \end{theorem}
 \begin{proof}
-	content...
+	Definer $\nu(G)=\int_G X(\omega)dP(\omega)$ på $(\Omega,\G)$ og antag $x\geq0$. Da er $\nu \ll P$, eftersom $P(A)=0\Rightarrow \nu(A)=0$. Så benyttes Radon-Nikodym: Definer $Z$ på $\G$ sådan at \[ Z=\frac{d\nu}{dP}\iff d\nu =ZdP \] som vi ved eksisterer fra Radon-Nikodym. Da er \[ \int_G Z dP = \int_G d\nu = \nu(G) = \int_G X dP, \forall G\in\G\] da Radon-Nikodym  siger at den afledede er entydig.
 \end{proof}
+%\subsection{Tidligere noter, med forbehold for fejl, burde udkommenteres}
+%Det vi kunne tænke os er en brugbar definition af objektet
+%\[ \EE[X|\G], \]
+%hvor $X$ er en stokastisk variabel og $\G$ er en 	$\sigma$-algebra inkluderet i $\FI$. Fortolkningen skulle gerne være, at $\EE[X|\G]$ er "forventningen (middelværdien) af $X$ givet at vi har adgang til informationen i $\G$". Det er ikke trivielt at formalisere denne let flygtige beskrivelse, så vi starter med en logisk tankerække.
+%
+%Vi starter med den ubetingede middelværdi givet ved
+%\[ \EE[X]=\int_{\Omega}X(\omega)P(d\omega), \]
+%altså er $\EE[X]$ et vægtet gennemsnit af værdier af $X$, hvor vi har brugt sandsynlighederne $P(d\omega)$ som vægte.
+%
+%Antag nu at vi har skaffet oplysninger om det stokastiske eksperiment, i det omfang at vi ved, at stikprøven $\omega$ ligger i mængden $B$. Den naturlige definition af den forventede værdi af $X$ givet $B$ findes nu gennem det vægtede gennemsnit af $X$ over det nye effektive udfaldsrum $B$. Vi skal selvfølgelig normalisere sandsynlighedsmålet så vi har total masse lig med forening på det nye rum $B$. Derfor normaliserer vi sandsynlighederne som 
+%\[ \frac{P(d\omega)}{P(B)}, \]
+%og vi kan nu definere objektet $\EE[X|B]$.
+%\begin{definition}
+%	Antag $B\in \FI$ med $P(B)>0$, og at $X\in L^1(\Omega,\FI,P)$. Så er "den betingede middelværdi af $X$ givet $B$"  defineret ved
+%	\[ \EE[X|B]=\frac{1}{P(B)}\int_B X(\omega)dP(\omega).\]
+%\end{definition}
+%\begin{theorem}
+%	Det er jeg ikke helt sikker på...
+%\end{theorem}
+%\begin{proof}
+%	content...
+%\end{proof}
 \newpage
 
 \section*{5. Martingaler og stoppetider.}
@@ -915,18 +965,34 @@ og vi kan nu definere objektet $\EE[X|B]$.
 \begin{definition}[Kvadratintegrabelt martingale]
 	Hvis $\EE \left[ X_t^2 \right]\leq M \forall t,t\in[ 0,\infty [$, siges $X$ at værre \textbf{kvadratintegrabel}
 \end{definition}
-
 \begin{theorem}[Martingal konvergens]
 	Antag $X$ er kvadratintegrabel, så eksisterer $X_\infty$ hvorom det gælder, at $X_t\to X_\infty$ i $L^2$ og $P$ n.o., når $t\to \infty$.
 	Ydermere gælder det at $X_t=\EE[ X_\infty\vert\FI_t ]\forall t\geq 0$.
 \end{theorem}
-\begin{proof}
-	content...
-\end{proof}
-\begin{definition}[Stoppetid]
-	En stoppetid er en stokastisk variabel...
-\end{definition}
 
+\begin{definition}[Stoppetid]
+	Givet et filtreret sandsynlighedsrum $(\Omega, \FI, P, \FIU)$, er en \textbf{stoppetid} med hensyn til filtreringen $\FIU$ en ikke negativ stokastisk variabel $T$ således at
+	\[ \{T\leq t\}\in\FI_t, \text{ for ethvert }t\geq 0.\]
+\end{definition}
+\begin{theorem}[Optional Sampling Theorem]
+	Antag at $X$ er en martingal som opfylder
+	\[ \sup\limits_{t\geq 0}\EE\left[ X_t^2 \right] \leq \infty.\]
+	Lad $S$ og $T$ være stoppetider hvor $S\leq T$, så gælder det at
+	\[ \EE\left[ X_T\vert \FI_S \right]=X_S, ~~ P \text{  n.s.} \]
+	%Hvis $X$ er en submartingale som opfylder samme integrabilitetsbetingelse, så holder resultatet med $\geq$ i stedet for $=$.
+\end{theorem}
+\begin{proof}
+	Vi begrænser os til diskret tid. Fra martingal konvergens sætningen har vi at der eksisterer en stokastisk variabel $Y$ sådan at 
+	\begin{equation}\label{eq:C.16}
+		X_n=\EE\left[ Y\vert \FI_n \right], ~~n=0,1,...
+	\end{equation}
+	Det er så åbenbart nok HVORFOR? (tak for lort bog) at vise, at for en hvilken som helst stoppetid $T$ har vi
+	\[ \EE\left[ Y\vert \FI_T \right]=X_T \]
+	altså skal vi vise, at for alle $A\in\FI_T$ har vi 
+	\[ \int_{A} Y dP=\int_A X_T dP. \]
+	Ved at skrive $A$ som $A=\bigcup_n(A\cap\{T=n\})$, husker vi at $A\cap\{T=n\}\in \FI_n$, og bruger ligning \ref{eq:C.16} får vi
+	\[ \int_A YdP=\sum\limits_{n=0}^{\infty}\int_{A\cap \{T=n\}} YdP= \sum\limits_{n=0}^{\infty}\int_{A\cap \{T=n\}} X_n dP= \int_A X_T dP.\]
+\end{proof}
 \newpage
 
 \section*{6. Brownske bevægelser og stokastiske integraler.}
@@ -936,25 +1002,91 @@ og vi kan nu definere objektet $\EE[X|B]$.
 		\item $W(0)=0$
 		\item Uafhængige intervaller: $r<s\leq t < u\Rightarrow W(u)-W(t) \& W(s)-W(r)$ er uafhængige stokastiske variable.
 		\item For $s<t \Rightarrow W(t)-W(s)\sim N(0,\sigma), \sigma=\sqrt{(t-s)}$
+		\item $W$ har kontinuerte spor/baner
 	\end{enumerate}
 \end{definition}
-\begin{definition}[Geometrisk Brownsk bevægelse (GBM)]
-	content...
-\end{definition}
-stok int intro
+Givet klassen $\pounds^2[a,b]$, ligger $g$ i $\pounds^2$ hvis:
+\begin{enumerate}
+	\item $\int_{a}^{b}\EE\left[g^2(s)\right]ds<\infty$
+	\item $g$ er $\FI_tW$- tilpasset
+\end{enumerate}
+Gvet klassen $\pounds^2[a,b]$ ligger $g$ i $L^2$ hvis:
+\begin{itemize}
+	\item $g$ ligger i  $\pounds^2[0,t],~ \forall t$
+\end{itemize}
 \begin{definition}[Stokastisk integrale]
-	content...
+	Det stokastiske integrale for en simpel funktion g(s) er givet ved
+	\[ \int_a^b g(s) ds =\sum\limits_{k=0}^{n-1}g(t_k)[W(t_{k+1})-W(t_k)],~a=t_0,b=t_n,~t_0<t_1<...<t_n \]
 \end{definition}
+For et generelt $g_n(s)$ \[ \int_{a}^{b}\EE\left[ g_n(s)-g(s) \right]^2ds \xrightarrow{n\to\infty} 0 \] og \[ \int_{a}^{b} g(s) ds= \lim\limits_{n\to \infty}\int_{a}^{b} g_n(s) ds\]
 \begin{theorem}
-	content...
+	Lad $g$ ligge i $\pounds^2$ så har vi:
+	\begin{enumerate}
+		\item $\EE\left[\int_{a}^{b} g(s) dWt  \right]=0$
+		\item $\EE\left[\left(\int_{a}^{b} g(s) dWt\right)^2  \right]=\int_{a}^{b}\EE\left[g^2(s)   \right]dWt$
+		\item $\int_{a}^{b} g(s) dWt  $ er $\FI_b^W$-måleligt
+	\end{enumerate}
 \end{theorem}
 \begin{proof}
-	content...
+	Det er ikke sådan ligetil, så vi nøjes med at vise "1" for en simpel funktion.
+	\[ \EE\left[\int_{a}^{b} g(s) dWt  \right]=\EE\left[ \sum\limits_{k=0}^{n-1}g(t_k)\Big(W(t_{k+1})-W(t_k)\Big)\right] \]
+	da middelværdier er lineære
+	\[ =\sum\limits_{k=0}^{n-1}\EE\left[ g(t_k)\Big(W(t_{k+1})-W(t_k)\Big)\right] \]
+	da $g$ er tilpasset afhænger $g$ af $t_k$ kun gennem wienerproces på $[0,t_n]$
+	\[ =\sum\limits_{k=0}^{n-1}\EE\left[ g(t_k)\right] \EE\left[(W(t_{k+1})-W(t_k)\right]\]
+	fra definitionen af wienerprocesser ved vi at middelværdien af tilvæksten er $0$ og når man ganger med $0$ er det hele
+	\[=0\]
 \end{proof}
 \newpage
 
 \section*{7. Stokastiske differentialligninger, diffusioner og Itos formel.}
-
+\begin{definition}[Diffusionsproces]
+	En diffusionsproces $\{X_t\}$ er givet ved følgende: $\{h(s) \}$, $\{ g(s) \}$ to stokastiske processer, $h,g\in \pounds^2$ og $h,g$ er tilpasset $\FI_t^\omega$ \[ X(t)-X(0)=\int_0^t h(s)ds+\int_0^t g(s) dW(s), \] hvor udtrykket før $+$ er driftled og udtrykket efter er diffusionsled.
+	\[ \EE\left[  X(t)-X(0) \right] = \int_0^t \EE\left[h(s)\right] ds+\EE\left[\int_0^t g(s) dW(s)\right]\]
+	Da middelværdien af diffusionsledet altid er $0$ gælder det at: $\{X_t\}$ er en martingale hvis og kun hvis $h(s)=0\forall s$.
+\end{definition}
+\begin{theorem}[Itôs formel]
+	Givet et  filtreret sandsynlighedsrum $(\Omega, \FI, P, \FIU)$, en Wienerproces $W(s)$ med hensyn til $\FI$, to mål $\mu(s)$ og $\sigma(s)$ tilpasset $\FIU$ og $\mu(s),\sigma(s) \in L^2$ er \[ dZ(t)=\left( f_t(t,X(t))+\mu(t)f_X(t,X(t))+\frac{1}{2}\sigma(t)f_{XX}(t,X(t)) \right)dt+\sigma(t)f_X(t,X(t))dW(t) \]
+	
+\end{theorem}
+Her mangler jeg bestemt noget forklaring om hvad der er hvad. Hvorefter vi forklarer hvad et stokastisk differentiale er, ud fra en geometrisk Brownsk bevægelse \[ dX(t)=\alpha X(t) dt +\sigma X(t) dW(t),\]
+\[X(0)=X. \]
+Vi ønsker så at løse denne differentialligning med Itôs formel, og starter med $ln(X)$, som giver mening da $\frac{\frac{dX}{dt}}{X(t)}=\alpha$
+\[ Z(t)=ln(X(t))=f(X(t)), \] vi skal bruge nogle afledte $f_t=0, f_X=\frac{1}{X}, f_{XX}=-\frac{1}{X^2}$ og indsætter i Itôs formel
+\begin{align*}
+	dZ(t)&=\frac{1}{X(t)}\left( \alpha X(t) +\sigma X(t) dW(t) \right)-\frac{1}{2}\frac{1}{X^2(t)}\sigma^2X^2(t)dt\\
+	&=\left(\alpha-\frac{1}{2}\sigma^2\right)dt+\sigma dW(t)
+\end{align*}
+Vi trækker nu $Z(0)$ fra $Z(t)$
+\begin{align*}
+	Z(t)-Z(0)&=\int_{0}^{t}\alpha-\frac{1}{2}\sigma^2ds+\int_{0}^{t}\sigma dW(s)\\
+	&=\left( \alpha-\frac{1}{2}\sigma^2 \right)t+\sigma W(t)
+\end{align*}
+da $e^{Z(t)-Z(0)}=e^{\left(\alpha - \frac{1}{2}\sigma^2\right)t+W(t)}$ og $\frac{X(t)}{x}=e^{\left(\alpha-\frac{1}{2}\right)t+\sigma W(t)}$ har vi at 
+\[ X(t)=xe^{\left(\alpha-\frac{1}{2}\sigma^2\right)t+\sigma W(t)} \]
+Vi søger nu middelværdien
+\begin{align*}
+	\EE\left[X(t)\right]&=\EE\left[ xe^{\left(\alpha-\frac{1}{2}\sigma^2\right)t+\sigma W(t)} \right]\\
+	&=xe^{\left(\alpha-\frac{1}{2}\sigma^2\right)t}\EE\left[ e^{\sigma W(t)} \right]
+\end{align*}
+og nu bliver det spændende, for jeg er ikke helt sikker på rækkefølgen af mine noter, men det er noget med at man ikke sådan bare lige finder den der middelværdi til sidst, så derfor husker vi at $X(t)$ er en geometrisk Brownsk bevægelse, siger
+\begin{align*}
+	m(t)=\EE[X(t)]\\
+	m'(t)=fm(t)\\
+	m(t)=ce^{\alpha t}\\
+	m(0)=c-x\\
+	m(t)=xe^{\alpha t}\\
+	\EE\left[ e^{\sigma W(t)} \right]=e^{\frac{1}{2}\sigma^2 t}
+\end{align*}
+hvorefter eller inden vi husker den anden måde at skrive en differentialligning på
+\[ X(t)=\alpha +\int_{0}^{t}\alpha X(t) dt+ \int_{0}^{t}\alpha  X(t)dW(t)\]
+\[ \EE\left[ X(t) \right]=x+\int_{0}^{t}\alpha\EE\left[ X(t) \right]dt+0. \]
+Så $dX(t)=aX(t)dt+\sigma dW(t)$ så har jeg skrevet "integrating factor" og jeg ved ikke helt hvorfor, $Z(t)=e^{kt}X(t)-f(t,x)$. $f_t=ke^{kt}x, f_x=e^{kt},f_{xx}=0$ så er der lige en differentialligning igen, man kunne tro, at vi er igang med endnu en omgang Itô
+\[ dZ(t)=ke^{kt}X(t)dt+e^{kt}aX(t)dt+\frac{1}{2}\sigma^2 0dt+e^{kt}\sigma dW(t) \]
+\[ dZ(t)=(k+a)Z(t)dt+e^{kt}\sigma dW(t) \]
+\[ k=-a\Rightarrow dZ(t)=e^{-at}\sigma dW(t) \]
+\[ Z(t)-Z(0)=\sigma\int_{0}^{t}e^{-as}dW(s)\Rightarrow e^{-at}(X(t)-X(0)) = \sigma\int_{0}^{t}e^{-as}dW(s) \]
+\[ X(t)-X(0)=\sigma\int_{0}^{t}e^{a(t-s)}dW(s) \]
 
 \newpage
 
