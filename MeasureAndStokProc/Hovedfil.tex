@@ -1045,12 +1045,15 @@ For et generelt $g_n(s)$ \[ \int_{a}^{b}\EE\left[ g_n(s)-g(s) \right]^2ds \xrigh
 	\[ \EE\left[  X(t)-X(0) \right] = \int_0^t \EE\left[h(s)\right] ds+\EE\left[\int_0^t g(s) dW(s)\right]\]
 	Da middelværdien af diffusionsledet altid er $0$ gælder det at: $\{X_t\}$ er en martingale hvis og kun hvis $h(s)=0\forall s$.
 \end{definition}
+\begin{definition}[Stokastisk differentialligning]
+	Las $\mu$ og $\sigma$
+\end{definition}
 \begin{theorem}[Itôs formel]
-	Givet et  filtreret sandsynlighedsrum $(\Omega, \FI, P, \FIU)$, en Wienerproces $W(s)$ med hensyn til $\FI$, to mål $\mu(s)$ og $\sigma(s)$ tilpasset $\FIU$ og $\mu(s),\sigma(s) \in L^2$ er \[ dZ(t)=\left( f_t(t,X(t))+\mu(t)f_X(t,X(t))+\frac{1}{2}\sigma(t)f_{XX}(t,X(t)) \right)dt+\sigma(t)f_X(t,X(t))dW(t) \]
+	Givet et  filtreret sandsynlighedsrum $(\Omega, \FI, P, \FIU)$, en Wienerproces $W(s)$ med hensyn til $\FI$, to processer $\mu(s)$ og $\sigma(s)$ tilpasset $\FIU$ og $\mu(s),\sigma(s) \in \pounds^2$ er \[ dZ(t)=\left( f_t(t,X(t))+\mu(t)f_X(t,X(t))+\frac{1}{2}\sigma(t)f_{XX}(t,X(t)) \right)dt+\sigma(t)f_X(t,X(t))dW(t) \]
 	
 \end{theorem}
 Her mangler jeg bestemt noget forklaring om hvad der er hvad. Hvorefter vi forklarer hvad et stokastisk differentiale er, ud fra en geometrisk Brownsk bevægelse \[ dX(t)=\alpha X(t) dt +\sigma X(t) dW(t),\]
-\[X(0)=X. \]
+\[X(0)=x. \]
 Vi ønsker så at løse denne differentialligning med Itôs formel, og starter med $ln(X)$, som giver mening da $\frac{\frac{dX}{dt}}{X(t)}=\alpha$
 \[ Z(t)=ln(X(t))=f(X(t)), \] vi skal bruge nogle afledte $f_t=0, f_X=\frac{1}{X}, f_{XX}=-\frac{1}{X^2}$ og indsætter i Itôs formel
 \begin{align*}

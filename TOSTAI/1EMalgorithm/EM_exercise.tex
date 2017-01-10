@@ -1,0 +1,186 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage[sc]{mathpazo}
+\usepackage[T1]{fontenc}
+
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% \usepackage{lmodern} %optional
+
+\usepackage{parskip,amsmath,array,booktabs,amssymb,color,alltt,bm,colortbl,bigints,wasysym,a4wide} 
+
+%\usepackage{hyperref}
+\addtolength{\topmargin}{-15mm}
+
+\newcommand{\iid}{\mbox{\,$\perp\!\!\!\perp$\,}}
+\DeclareMathOperator{\logit}{logit}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\V}{\mathbb{V}}
+\DeclareMathOperator{\C}{\mathbb{C}}
+\DeclareMathOperator{\argmax}{\arg\max}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\R}{\bfseries\textsf{R}}
+
+\newcommand{\diff}[1]{\ensuremath{{\frac{\partial}{\partial#1}}}}
+\newcommand{\difff}[2]{\ensuremath{{\frac{\partial^2}{\partial#1\partial#2}}}}
+\newcommand{\mc}[3]{\multicolumn{#1}{#2}{#3}}  
+\newcommand{\bx}{\ensuremath{\bm{x}}}
+\newcommand{\by}{\ensuremath{\bm{y}}}
+\newcommand{\bym}{\ensuremath{{\bm{y}_\text{mis}}}}
+\newcommand{\byo}{\ensuremath{{\bm{y}_\text{obs}}}}
+\newcommand{\bn}{\ensuremath{\bm{n}}}
+\newcommand{\bnm}{\ensuremath{{\bm{n}_\text{mis}}}}
+\newcommand{\bno}{\ensuremath{{\bm{n}_\text{obs}}}}
+
+\newcommand{\bz}{\ensuremath{\bm{z}}}
+\newcommand{\bt}{\ensuremath{{\bm{\theta}}}}
+\newcommand{\bti}[1]{\ensuremath{{\bm{\theta}^{(#1)}}}}
+\newcommand{\setfont}[1]{\fontsize{#1pt}{#1pt}\selectfont}
+\newcommand{\code}[1]{{\texttt{#1}}}
+
+\begin{document}
+
+\title{Topics in Statistical Sciences 1 -- Exam exercise 1}
+\author{S{\o}ren H{\o}jsgaard and Torben Tvedebrink}
+
+\maketitle
+
+This exercise is about the EM algorithm as discussed in first three
+lectures of Topics in Statistical Sciences 1. During the oral exam you
+will have 20 min to present the exercise. You decide what topics to
+cover and how to present them, however, we will ask questions to any
+part of the exercise and presentation.
+
+\section{Proof for non-decreasing log-likelihood}
+\label{sec:proof-non-decreasing}
+
+In the lectures we saw that $\ell_\text{obs}(\bti{t+1};\byo) \ge
+\ell_\text{obs}(\bti{t};\byo)$. The arguments relied on an explicit
+use of Jensen's inequality. Using the Kullbach-Leibler divergence,
+$KL$, between two probability distributions, $f$ and $g$, is another
+way to show the sequence of log-likelihoods is non-decreasing;
+\begin{displaymath}
+  KL(f : g) = \int f(x) \log\frac{f(x)}{g(x)} dx \ge 0.
+\end{displaymath}
+The $KL$ divergence defines an asymmetric distance measure between
+probability distributions, where $KL(f : g) = 0$ if and only if $f=g$
+(almost everywhere).
+
+Define $q(\bt;\bti{t})$ as the expectation over the log likelihood
+\textbf{ratio} given $\bti{t}$ and $\byo$:
+\begin{displaymath}
+  q(\bt;\bti{t}) =
+  \E_{\bti{t}}\left\{\log\frac{f(\by;\bt)}{f(\by;\bti{t})} \;\Big|\; \byo\right\}.
+\end{displaymath}
+Hence, $q(\bt;\bti{t})$ is ratios of log-likelihoods compared to
+$Q(\bt;\bti{t})$, which was simply the log-likelihood.
+
+\begin{enumerate}
+\item Show that $q(\bt;\bti{t})$ can be written as
+  \begin{equation}
+    q(\bt;\bti{t}) = \ell_\text{obs}(\bt;\byo) - \ell_\text{obs}(\bti{t};\byo) -
+    KL\{f_\text{mis}(\bti{t}) : f_\text{mis}(\bt)\}, \label{eq:kl}
+  \end{equation}
+  where $f_\text{mis}(\bt) = f(\bym\mid\byo;\bt)$.
+\item Use the expression in \eqref{eq:kl}, to show that
+  \begin{displaymath}
+    \left.\diff{\bt} q(\bt;\bti{t})\right|_{\bt=\bti{t}} = 
+    \left.\diff{\bt} \ell_\text{obs}(\bt;\byo)\right|_{\bt=\bti{t}}
+  \end{displaymath}
+\end{enumerate}
+
+Analogue to the EM algorithm discussed in the lecture, the next
+parameters $\bti{t+1}$ are found in the M-step by evaluating
+$\argmax_\bt q(\bt;\bti{t})$.
+
+\begin{enumerate}
+  \setcounter{enumi}{2}
+\item Show that this implies that $q(\bti{t+1};\bti{t})\ge0$.
+\item Based on this result, obtain the final expression
+  \begin{displaymath}
+    \ell_\text{obs}(\bti{t+1};\byo) \ge \ell_\text{obs}(\bti{t};\byo).
+  \end{displaymath}
+\end{enumerate}
+
+\section{Contingency tables}
+
+Let us consider observations from two binary variables $I$ and $J$,
+$I\in\{0,1\}$ and $J\in\{0,1\}$. It is custom to summaries the
+observations in a contingency table with counts $\bn = \{n_{ij}\}_{i,j}$,
+i.e.\ $n_{ij}$ is the number of rows with $I=i$ and $J=j$. Hence,
+$\bn$ is a  $2\times2$-table.
+
+In the case of missing data, we might only observe $I$ or $J$ (or
+both). If neither $I$ nor $J$ is observed we discard the data (here we
+assume that only the variables $I$ and $J$ are recorded, i.e.\ no
+further variables in the data). 
+
+Let $n^{IJ} = \{n^{IJ}_{ij}\}$ denote the complete observations
+(observed $I=i$ and $J=j$). If only $I=i$\vspace{-1.0mm}\linebreak%
+was observed (i.e.\ $J$ is missing -- $J$ could be either $0$ or $1$)
+we denote the counts $n^I= \{n^I_{i+}\}$, and\vspace{-0.85mm}\linebreak%
+similarly $n_{+j}^J$ denotes the counts when only $J=j$ is
+observed. The subscript ``+'' indicates that\vspace{-0.85mm}\linebreak%
+for, e.g.\ $n^I_{i+}$ only $I=i$ is observed and thus these counts are
+\textsl{marginalised} over $j$. Table~\ref{tab:missing} shows the concept.
+
+\begin{table}[!h]
+  \centering
+  \begin{tabular}{*{4}{>{$}l<{$}}}
+    \toprule
+    & \mc{3}{c}{J}\\
+    \cmidrule(l){2-4}
+    I & 0 & 1 & \mathtt{NA}\\
+    \cmidrule(r){1-1}\cmidrule(l){2-4}
+    0 & n^{IJ}_{00} & n^{IJ}_{01} & n^I_{0+} \\[2mm]
+    1 & n^{IJ}_{10} & n^{IJ}_{11} & n^I_{1+} \\[2mm]+
+    \mathtt{NA} & n^J_{+0} & n^J_{+1}& {0}\\
+    \bottomrule
+  \end{tabular}
+  \caption{Missing data in a $2\times2$-table. Similar to \texttt{R>
+      table(I, J, useNA = "always")}.}
+  \label{tab:missing}
+\end{table}
+
+Furthermore, note that the row and column sums include the \texttt{NA}
+cells. Let the total count be $n = n^{IJ}_{++} + n^I_{++} + n^J_{++}$, where
+subscript ``+'' denotes summation over the index.
+
+We assume that the mechanism of missingness can be ignored.
+
+\begin{enumerate}
+\item Show that the complete data log-likelihood is
+  \begin{displaymath}
+    \ell(\bm\pi;\bm{n}) = \sum_{i,j} (n^{IJ}_{ij}+n^I_{ij}+n^J_{ij})\log \pi_{ij},
+    \quad\text{where}\quad
+    \pi_{ij}\ge0 ~~\text{and}~~ \sum_{i,j}\pi_{ij} = 1.
+  \end{displaymath}
+\item Identify the terms that need to be imputed in the E-step and
+  derive the expressions for each term.
+\item The likelihood equations in the M-step yield simple closed form
+  expressions for $\bm\pi^{(t)}$. Derive these.
+\item Implement the algorithm in {R} and use it on the data
+  \texttt{IJdata} (available on moodle).
+\item Plot the log-likelihood against the iterations and confirm it is
+  a non-decreasing sequence.
+\item For the underlying data generating mechanism, we have for $\pi_{ij}$
+  \begin{equation}
+    \pi_{00} = 0.2, \quad \pi_{01} = 0.075,\quad \pi_{01} = 0.3,\quad \pi_{11} = 0.425
+    \label{eq:pi}
+  \end{equation}
+  Compare the EM estimates $\hat{\bm\pi}$ and the complete case
+  estimates $\tilde{\bm{\pi}}$ (i.e.\ only using the complete cases
+  $n_{ij}^{IJ}$, such that $\tilde{\pi}_{ij} =
+  n^{IJ}_{ij}/n_{++}^{IJ}$) of $\bm\pi$ to the true parameter values
+  in \eqref{eq:pi}.
+\end{enumerate}
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

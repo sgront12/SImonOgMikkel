@@ -1,0 +1,169 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage[sc]{mathpazo}
+\usepackage[T1]{fontenc}
+
+
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% \usepackage{lmodern} %optional
+
+\usepackage{parskip,amsmath,array,booktabs,amssymb,color,alltt,bm,colortbl,bigints,wasysym,a4wide} 
+
+\usepackage{mathtools}
+\addtolength{\topmargin}{-15mm}
+
+\newcommand{\iid}{\mbox{\,$\perp\!\!\!\perp$\,}}
+\DeclareMathOperator{\logit}{logit}
+\DeclareMathOperator{\E}{\mathbb{E}}
+\DeclareMathOperator{\V}{\mathbb{V}}
+\DeclareMathOperator{\C}{\mathbb{C}}
+\DeclareMathOperator{\argmax}{\arg\max}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\R}{\bfseries\textsf{R}}
+
+\newcommand{\mc}[3]{\multicolumn{#1}{#2}{#3}}  
+\newcommand{\bx}{\ensuremath{\bm{x}}}
+\newcommand{\bbx}{\ensuremath{\bar{\bx}}}
+\newcommand{\tbx}{\ensuremath{\tilde{\bx}}}
+\newcommand{\bu}{\ensuremath{\bm{u}}}
+\newcommand{\bv}{\ensuremath{\bm{v}}}
+\newcommand{\bmf}{\ensuremath{\bm{f}}}
+\newcommand{\bep}{\ensuremath{\bm{\varepsilon}}}
+\newcommand{\by}{\ensuremath{\bm{y}}}
+\newcommand{\bym}{\ensuremath{{\bm{y}_\text{mis}}}}
+\newcommand{\byo}{\ensuremath{{\bm{y}_\text{obs}}}}
+\newcommand{\bz}{\ensuremath{\bm{z}}}
+\newcommand{\bmu}{\ensuremath{\bm{\mu}}}
+\newcommand{\Sm}{\ensuremath{\Sigma}}
+\newcommand{\Lm}{\ensuremath{\Lambda}}
+\newcommand{\lm}[1]{\ensuremath{\lambda_{#1}}}
+\newcommand{\Lmt}{\ensuremath{\Lm\Lm^\top}}
+\newcommand{\diff}[1]{\ensuremath{{\frac{\partial}{\partial#1}}}}
+\newcommand{\difff}[2]{\ensuremath{{\frac{\partial^2}{\partial#1\partial#2}}}}
+\newcommand{\N}{\ensuremath{\mathcal{N}}}
+\newcommand{\be}[1]{\ensuremath{{\bm{e}_{(#1)}}}}
+\newcommand{\bt}{\ensuremath{{\bm{\theta}}}}
+\newcommand{\bti}[1]{\ensuremath{{\bm{\theta}^{(#1)}}}}
+\newcommand{\setfont}[1]{\fontsize{#1pt}{#1pt}\selectfont}
+\newcommand{\code}[1]{{\texttt{#1}}}
+
+
+\begin{document}
+
+\title{Topics in Statistical Sciences 1 -- Exam exercise 2}
+\author{S{\o}ren H{\o}jsgaard and Torben Tvedebrink}
+
+\maketitle
+
+
+This exercise is about Factor Analysis as discussed in three lectures
+of Topics in Statistical Sciences 1. During the oral exam you will
+have 20 min to present the exercise. You decide what topics to cover
+and how to present them, however, we will ask questions to any part of
+the exercise and presentation.
+
+\section{Some theoretical results for Factor Analysis}
+\label{sec:proof-non-decreasing}
+
+\begin{enumerate}
+\item Show that the Bartlett (1938) method for estimating the specific
+  factor, $\tilde{\bmf}_i$ for a given observation, $\bx_i$, using
+  weighted least squares is given by
+  \begin{displaymath}
+    \tilde{\bmf}_i = (\Lm^\top\Psi^{-1}\Lm)^{-1}\Lm^\top\Psi^{-1}(\bx_i-\bmu).
+  \end{displaymath}
+
+  In \textsl{R} these are obtained by setting \texttt{scores =
+    "Bartlett"} in \texttt{factanal}.
+\item For \texttt{scores = "regression"} we use the method of Thomson
+  (1951). Let $\hat{f} = A(\bx-\bmu)$ and show that the expression,
+  which minimises $\E[\|\hat{\bmf}-\bmf\|^2]$ is given by
+  \begin{align}
+    \hat{\bmf} &=  \Lm^\top(\Lmt+\Psi)^{-1}(\bx - \bmu)\notag\\
+    &= (I_k + \Lm^\top\Psi^{-1}\Lm)^{-1}\Lm^\top\Psi^{-1}(\bx - \bmu)\label{eq:thomson}
+  \end{align}
+  For the last expression in \eqref{eq:thomson} you will make use of
+  Woodbury's identity and the fact that for a regular matrix $J$:
+  \begin{displaymath}
+    J = I + J - I 
+    \quad\text{from which we have}\quad
+    J(I+J)^{-1} = I - (I+J)^{-1}
+  \end{displaymath}
+  Note that the Thomson approach coincides with $\E[\bmf\mid\bx]$,
+  i.e.\ $\bmf$ is regressed on $\bx$.
+\end{enumerate}
+
+In the discussion of the EM algorithm in the lecture, the result in
+the M-step for $\Psi^{(t+1)}$ relied on the most recent estimate of
+$\Lm^{(t+1)}$ (not $\Lm^{(t)}$ as would be the usual case in an EM
+algorithm). However, this result relied implicitly on a generalised
+version of the EM algorithm. Here we show a more directed result using
+an ordinary EM algorithm.
+
+\begin{enumerate}
+  \setcounter{enumi}{2}
+\item Show that the derivative of the expected log likelihood with
+  respect to $\Psi^{-1}$ is given as
+\begin{multline}
+  \diff{\Psi^{-1}}q(\bt; \bti{t}) = \frac{n}{2}\Psi -
+  \frac{n}{2}\E_{\bti{t}}[S\mid \bx] = \\
+ ~\quad\frac{n}{2}\Psi -\frac{1}{2}\sum_{i=1}^n
+ \{\bx_i\bx_i^\top - \Lm\E_{\bti{t}}[\bmf_i\mid\bx_i]\bx_i^\top -
+  \bx_i\E_{\bti{t}}[\bmf_i\mid\bx_i]^\top\Lm^\top +
+  \Lm(\E_{\bti{t}}[\bmf_i\bmf_i^\top\mid\bx_i])\Lm^\top\} \label{eq:psi}
+\end{multline}
+\item Use the result in \eqref{eq:psi} to derive the M-step for the EM
+  algorithm, where we note that only the diagonal elements are needed.
+\end{enumerate}
+
+\section{Analysis of \texttt{carcass\underline{~}fa} data}
+
+In the \texttt{gRbase} package (H{\o}jsgaard, 2005) the dataset
+\texttt{carcassall} is available. A dataset
+(\texttt{carcass\underline{~}fa}) containing a subset of the variables
+is available on Moodle. From \texttt{?carcassall} we get the short
+description of the dataset: ``Measurement of lean meat percentage of
+344 pig carcasses together with auxiliary information collected at
+three Danish slaughter houses''
+
+The \texttt{carcass\underline{~}fa} dataset on Moodle contains measurements of 14
+numeric measurements taken in order to assess the lean meat content:
+{\sl
+\begin{description}
+\item[weight]
+Weight of carcass
+
+\item[lengthc]
+Length of carcass from back toe to head (when the carcass hangs in the back legs)
+
+\item[lengthf]
+Length of carcass from back toe to front leg (that is, to the shoulder)
+
+\item[lengthp]
+Length of carcass from back toe to the pelvic bone
+
+\item[Fat02, Fat03, Fat11, Fat12, Fat13, Fat14, Fat16] Thickness of
+  fat layer at different locations on the back of the carcass (FatXX
+  refers to thickness at (or rather next to) rib no). XX. Notice that
+  02 is closest to the head
+
+\item[Meat11, Meat12, Meat13]
+Thickness of meat layer at different locations on the back of the carcass, see description above
+\end{description}
+}
+
+Analyse the \texttt{carcass\underline{~}fa} data using factor
+analysis. In your analysis you should assess the number of appropriate
+factors, some visual output (graphics) to support the analysis and
+make an attempt to interpret the analysis.
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
