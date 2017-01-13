@@ -61,6 +61,8 @@ pairs(FA_varimax$loadings[,1:3],panel = function(x,y) text(x,y, labels=rownames(
 
 # til sidst den der oblimax
 library(GPArotation)
-(FA_oblimax = factanal(self_rate, factors = 3, rotation = "oblimax"))
+(FA_oblimax = factanal(carcass, factors = 3, rotation = "oblimax"))
 # Det er godt nok en lav p-værdi, men det er den også med kun 2 faktorer
+
+
 
