@@ -9,15 +9,15 @@ library(gRain)
 library(gRim)
 library(Rgraphviz)
 
-dg1            <-            dag(~S +  L|S+ X|L:S +  B|S  +    D|L:B)
-dg2            <-            dag(~S|X + L|S + X|L +  B|S  +    D|L:B)
+
+##Opgave 1
+dg1<-dag(~S+L|S+X|L:S+B|S+D|L:B)
+dg2<-dag(~S|X+L|S+X|L+B|S+D|L:B)
 par(mfrow=c(1,2))
 plot(dg1)
 plot(dg2)
-b<-as(dg2, "matrix")
-b
-nrow(b)
-rowSums(b)
+b1<-as(dg1, "matrix")
+b2<-as(dg2, "matrix")
 
 algoritme <- function(x){ #x er en matrix
   while(length(x)>1){
@@ -37,5 +37,11 @@ algoritme <- function(x){ #x er en matrix
   }else{print("Det er ikke en DAG!")}
 }
 
-algoritme(b)
-b
+algoritme(b1)
+algoritme(b2)
+
+##Opgave 2
+dg<-dag(~smoke+lung|smoke+xray|lung:smoke+bronc|smoke+dysp|bronc:lung)
+plot(dg)
+data(chestSim1000,package="gRbase")
+head(chestSim1000)

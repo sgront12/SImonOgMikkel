@@ -62,11 +62,14 @@ mnEM=function(x, tol){
 }
 
 #Anvendelse af ovenstaaende funktion
-load("IJdata.csv")
+library(readr)
+IJdata <- read_csv("C:/Users/Mikke/Desktop/SImonOgMikkel/trunk/TOSTAI/1EMalgorithm/IJdata.csv")
+View(IJdata)
 tol=1.e-10 #Tolerance
 X=IJdata #Datasaet
 
 EM1=mnEM(X,tol)
 EM1$Estep
 sum(EM1$pi)
+EM1$pi
 EM1$itt
