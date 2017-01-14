@@ -11,7 +11,7 @@ corrplot(cor(carcass_fa), order = "hclust", tl.col='black', tl.cex=.75)
 carcass <- as.data.frame(scale(carcass_fa))
 
 # Vi pruger psych pakken, der står godt nok den er beregnet til pprykiatriske tests, men lad os se hvad vi får ud af det
-load(psych)
+library(psych)
 nfact_carcass <- psych::nfactors(carcass,rotate = "none")
 # Jeg forstår ikke alle de her plots, en det ser ud til i den "Emperical BIC" at 3 faktorer er sagen
 
@@ -25,7 +25,7 @@ FA_none <- factanal(carcass, factors = 3, rotation = "none", na.action = na.omit
 FA_none$loadings
 
 # Her er jeg ikke helt med
-sum(FA_none$loadings[,1]^2)/32 ## S is correlation matrix, hence: tr(S) = 1*p = 32
+sum(FA_none$loadings[,1]^2)/14 ## S is correlation matrix, hence: tr(S) = 1*p = 32
 
 
 # Vi ser på nogle egenværdier
@@ -54,9 +54,15 @@ text(FA_varimax$loadings[,1:2],labels=rownames(FA_varimax$loadings),cex=.7)
 
 
 # Der er blevet en mere tydelig gruppering, men "weight" ser mere ensom ud
+pairs(FA_none$loadings[,1:3],panel = function(x,y) text(x,y, labels=rownames(FA_none$loadings)))
 
 pairs(FA_varimax$loadings[,1:3],panel = function(x,y) text(x,y, labels=rownames(FA_varimax$loadings)))
 
+
+FA_varimax$uniquenesses
+loadings_distant = FA_varimax$loadings[1,]
+(communality_distant = sum(loadings_distant^2))
+(uniqueness_distant = 1-communality_distant)
 
 
 # til sidst den der oblimax
