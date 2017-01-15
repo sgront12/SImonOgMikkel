@@ -218,8 +218,8 @@ BayNet2</code></pre>
 ##   yes 0.6060848 0.3939152
 ##   no  0.3589553 0.6410447</code></pre>
 </div>
-<div id="opgave-2.2-betingede-fordelinger-af-lung" class="section level1">
-<h1>Opgave 2.2 betingede fordelinger af lung</h1>
+<div id="opgave-2.3-betingede-fordelinger-af-lung" class="section level1">
+<h1>Opgave 2.3 betingede fordelinger af lung</h1>
 <p>Vi finder først den betingede fordeling af lung givet smoke</p>
 <pre class="r"><code>querygrain(BayNet1, nodes=c(&quot;lung&quot;,&quot;smoke&quot;), type=&quot;conditional&quot;)</code></pre>
 <pre><code>##      lung
@@ -247,8 +247,8 @@ BayNet2</code></pre>
 ## Statistic (DEV):    1.686 df: 2 p-value: 0.4303 method: CHISQ</code></pre>
 <p>p-værdien er langt over 0.05 hvilket antyder at de er betinget uafhængige.</p>
 </div>
-<div id="opgave-2.3-flere-betingede-fordelinger-af-lung" class="section level1">
-<h1>Opgave 2.3 flere betingede fordelinger af lung</h1>
+<div id="opgave-2.4-flere-betingede-fordelinger-af-lung" class="section level1">
+<h1>Opgave 2.4 flere betingede fordelinger af lung</h1>
 <p>Vi finder først den betingede fordeling af lung givet smoke og dysp</p>
 <pre class="r"><code>querygrain(BayNet1, nodes=c(&quot;lung&quot;,&quot;smoke&quot;,&quot;dysp&quot;), type=&quot;conditional&quot;)</code></pre>
 <pre><code>## , , lung = yes
@@ -298,6 +298,10 @@ BayNet2</code></pre>
 <pre><code>## Testing lung _|_ bronc | dysp smoke 
 ## Statistic (DEV):   36.807 df: 3 p-value: 0.0000 method: CHISQ</code></pre>
 <p>og det ses at der ikke er betinget uadhængighed.</p>
+</div>
+<div id="opgave-2.5-messagepassing-algoritme" class="section level1">
+<h1>Opgave 2.5 messagepassing algoritme</h1>
+<p>Vi starter ovre i latexdokumentet, hvor der skitseres hvordan man kommer fra en DAG til et kliketræ. Der konkluderes at vi nu skal se på de tre funktioner q_1, q_2 og q_3, som indgår i P(V)=q_1(X,L,S)q_2(S,L,B)q_3(L,B,D)</p>
 </div>
 
 

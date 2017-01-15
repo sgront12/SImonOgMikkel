@@ -119,7 +119,7 @@ Vi finder den betingede fordeling af smoke givet dysp; P(smoke|dysp)
 ```{r}
 querygrain(BayNet1, nodes=c("smoke","dysp"), type="conditional")
 ```
-# Opgave 2.2 betingede fordelinger af lung
+# Opgave 2.3 betingede fordelinger af lung
 Vi finder først den betingede fordeling af lung givet smoke
 ```{r}
 querygrain(BayNet1, nodes=c("lung","smoke"), type="conditional")
@@ -134,7 +134,7 @@ ciTest(xtabs(~smoke+lung+bronc+dysp+xray,data=chestSim1000),set=c("lung","bronc"
 ```
 p-værdien er langt over 0.05 hvilket antyder at de er betinget uafhængige.
 
-# Opgave 2.3 flere betingede fordelinger af lung
+# Opgave 2.4 flere betingede fordelinger af lung
 Vi finder først den betingede fordeling af lung givet smoke og dysp
 ```{r}
 querygrain(BayNet1, nodes=c("lung","smoke","dysp"), type="conditional")
@@ -149,4 +149,45 @@ ciTest(xtabs(~smoke+lung+bronc+dysp+xray,data=chestSim1000),set=c("lung","bronc"
 ```
 og det ses at der ikke er betinget uadhængighed.
 
+# Opgave 2.5 messagepassing algoritme
+Vi starter ovre i latexdokumentet, hvor der skitseres hvordan man kommer fra en DAG til et kliketræ. Der konkluderes at vi nu skal se på de tre funktioner q_1, q_2 og q_3, som indgår i P(V)=q_1(X,L,S)q_2(S,L,B)q_3(L,B,D)
+```{r,include=FALSE}
+q1.XLS=arprod(p.x_ls,p.s)
+q2.SLB=arprod(p.l_s,p.b_s)
+q3.LBD=p.d_lb
+```
+Vi collecter evidence
+```{r}
+q3.D=armarg(q3.D,"D")
+
+q4.al=armarg(q4.st.al,"al"); q4.al
+q4.st.al=ardiv(q4.st.al,q4.al); q4.st.al
+q3.an.al=armult(q3.an.al, q4.al); q3.an.al
+
+q3.al=armarg(q3.an.al,"al"); q3.al
+q3.an.al=ardiv(q3.an.al,q3.al); q3.an.al
+q2.ve.al=armult(q2.ve.al, q3.al); q2.ve.al
+
+q2.al=armarg(q2.ve.al,"al"); q2.al
+q2.ve.al=ardiv(q2.ve.al,q2.al); q2.ve.al
+q1.me.al=armult(q1.me.al, q2.al); q1.me.al
+```
+Vi distrubuter evidence
+```{r}
+q1.al=armarg(q1.me.al,"al"); q1.al
+q2.ve.al=armult(q2.ve.al,q1.al); q2.ve.al
+
+q2.al=armarg(q2.ve.al,"al"); q2.al
+q3.an.al=armult(q3.an.al,q2.al); q3.an.al
+
+q3.al=armarg(q3.an.al,"al"); q3.al
+q4.st.al=armult(q4.st.al,q3.al); q4.st.al
+```
+Og så udregner vi klikemarginalerner
+```{r}
+p.me.al=q1.me.al; p.me.al
+p.ve.al=q2.ve.al; p.ve.al
+p.an.al=q3.an.al; p.an.al
+p.st.al=q4.st.al; p.st.al
+```
 
