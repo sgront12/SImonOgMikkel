@@ -152,42 +152,35 @@ og det ses at der ikke er betinget uadhængighed.
 # Opgave 2.5 messagepassing algoritme
 Vi starter ovre i latexdokumentet, hvor der skitseres hvordan man kommer fra en DAG til et kliketræ. Der konkluderes at vi nu skal se på de tre funktioner q_1, q_2 og q_3, som indgår i P(V)=q_1(X,L,S)q_2(S,L,B)q_3(L,B,D)
 ```{r,include=FALSE}
-q1.XLS=arprod(p.x_ls,p.s)
-q2.SLB=arprod(p.l_s,p.b_s)
-q3.LBD=p.d_lb
+q1.XLS=arprod(p.x_ls,p.s);q1.XLS
+q2.SLB=arprod(p.l_s,p.b_s);q2.SLB
+q3.LBD=p.d_lb;q3.LBD
 ```
 Vi collecter evidence
 ```{r}
-q3.D=armarg(q3.D,"D")
+q3.LB=armarg(q3.LBD,c("lung","bronc"))
+q3.LBD=ardiv(q3.LBD,q3.LB)
+q2.SLB=armult(q2.SLB, q3.LB)
 
-q4.al=armarg(q4.st.al,"al"); q4.al
-q4.st.al=ardiv(q4.st.al,q4.al); q4.st.al
-q3.an.al=armult(q3.an.al, q4.al); q3.an.al
+q2.SL=armarg(q2.SLB,c("smoke","lung"))
+q2.SLB=ardiv(q2.SLB,q2.SL)
+q1.XLS=armult(q1.XLS, q2.SL)
 
-q3.al=armarg(q3.an.al,"al"); q3.al
-q3.an.al=ardiv(q3.an.al,q3.al); q3.an.al
-q2.ve.al=armult(q2.ve.al, q3.al); q2.ve.al
-
-q2.al=armarg(q2.ve.al,"al"); q2.al
-q2.ve.al=ardiv(q2.ve.al,q2.al); q2.ve.al
-q1.me.al=armult(q1.me.al, q2.al); q1.me.al
 ```
 Vi distrubuter evidence
 ```{r}
-q1.al=armarg(q1.me.al,"al"); q1.al
-q2.ve.al=armult(q2.ve.al,q1.al); q2.ve.al
 
-q2.al=armarg(q2.ve.al,"al"); q2.al
-q3.an.al=armult(q3.an.al,q2.al); q3.an.al
+q1.SL=armarg(q1.XLS,c("smoke","lung"))
+q2.SLB=armult(q2.SLB,q1.SL)
 
-q3.al=armarg(q3.an.al,"al"); q3.al
-q4.st.al=armult(q4.st.al,q3.al); q4.st.al
+q2.LB=armarg(q2.SLB,c("lung","bronc"))
+q3.LBD=armult(q3.LBD,q2.LB)
+
 ```
 Og så udregner vi klikemarginalerner
 ```{r}
-p.me.al=q1.me.al; p.me.al
-p.ve.al=q2.ve.al; p.ve.al
-p.an.al=q3.an.al; p.an.al
-p.st.al=q4.st.al; p.st.al
+p.XLS=q1.XLS;p.XLS
+p.SLB=q2.SLB;p.SLB
+p.LBD=q3.LBD;p.LBD
 ```
 
