@@ -27,15 +27,6 @@ carcass <- as.data.frame(scale(carcass_fa))
 
 ```
 
-Vi ser herunder et scree plot, hvor vi ser en grafisk afbildning af egenværdierne.
-
-```{r, echo=FALSE }
-plot(nscree_carcass <- nFactors::nScree(carcass))
-```
-```{r, echo=FALSE }
-nscree_carcass
-```
-Igen peger alt mod 3 faktorer. Vi regner eigenværdierne ud.
 ```{r, echo=FALSE }
 (carcass_eigen <- eigen(cov(carcass))$value)
 ```
@@ -46,9 +37,10 @@ Og konkluderer endnu en gang at 3 faktorer er et godt bud. Altså finder vi nu d
 FactAnalNoRota <- factanal(carcass, factors = 3, rotation = "none", na.action = na.omit)
 ```
 ```{r}
-factanal(carcass, factors = 3, rotation = "none", na.action = na.omit)
+FactAnalNoRota$uniquenes
+FactAnalNoRota$loadings
 ```
- ---- Her skal der kloges i "uniqueness" "loadings" og "chi-square-tes" --- 
+ ---- Her skal der kloges i "uniqueness" og "loadings" --- 
 
 På plottet herunder, kan vi se hvorledes de enkelte variable korrelerer med to af de tre faktorer.
 ```{r, echo=FALSE }

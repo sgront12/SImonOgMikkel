@@ -1,7 +1,7 @@
 #Bayesianske netvaerk
 library(gRim)
 library(Rgraphviz)
-X=read.csv("~/Desktop/math.csv") #Datasaet
+X=read.csv("math.csv") #Datasaet
 
 #Hver variabel i data inddeles i 3 niveauer
 V=lapply(X,cut,breaks=3,labels=c("L","M","H"))

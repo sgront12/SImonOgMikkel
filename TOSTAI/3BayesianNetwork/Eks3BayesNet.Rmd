@@ -82,7 +82,7 @@ plot(graf3)
 graf3Matrix<-as(graf3, "matrix")
 ```
 
-Og et udsnit af datasettet chestsim1000, som er simulerede patienter, som kunne have besøgt en torso klinik. Vi ønsker nu at løse de stillede opgaver
+Og et udsnit af datasættet chestsim1000, som er simulerede patienter, som kunne have besøgt en torso klinik. Vi ønsker nu at løse de stillede opgaver
 
 # Opgave 2.1 fra CPT'er til Bayisiansk netværk
 Først definerer vi hvilke betingede sandsynligheder hele netværket kan deles op i ud fra den givne DAG, dette kunne også have være gjort den anden vej, altså ud fra dataen ved brug af ciTest. Først tæller vi hvor mange patienter der har henholdsvis yes og no i de forskellige situationer.
