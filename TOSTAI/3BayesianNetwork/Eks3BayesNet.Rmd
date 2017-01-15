@@ -1,0 +1,152 @@
+---
+title: "Eksamensspørgsmål 3: Bayesianske netværk"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gRbase)
+library(gRain)
+library(gRim)
+library(Rgraphviz)
+data(chestSim1000, package="gRbase")
+```
+## Opgave 1
+Givet de to orienterede grafer:
+
+```{r, echo=FALSE}
+graf1<-dag(~S+L|S+X|L:S+B|S+D|L:B)
+graf2<-dag(~S|X+L|S+X|L+B|S+D|L:B)
+par(mfrow=c(1,2))
+plot(graf1)
+plot(graf2)
+graf1Matrix<-as(graf1, "matrix")
+graf2Matrix<-as(graf2, "matrix")
+```
+
+vil vi vide om de er acykliske. For nemmere at kunne regne på dem, repræsenteres de som matricer:
+```{r, echo=FALSE}
+graf1Matrix
+graf2Matrix
+```
+Hver række repræsenterer en knude, i indgangene er der et 1-tal hvor der er en orienteret graf til den i søjlen benævnte knude. 
+
+# Opgave 1.1: Lav en elgoritme, som kan afgøre om en DAG er acyklisk
+Tanken i algoritmen er at så på "barnløse børn" eller "dead ends". Algoritmen finder en dead end og fjerner den så fra DAG'en, det fortsætter den med indtil der ikke er flere knuder i grafen. Hvis der på et tidspunkt skulle være knuder tilbage, men ikke flere dead ends at fjerne, konkluderes det at grafen ikke er acyklisk. 
+```{r}
+algoritme <- function(x){
+  while(length(x)>1){
+    sum = rowSums(x)
+    if(any(sum==0)==TRUE){
+      for(i in 1:nrow(x)){
+        if(sum[i]==0){ 
+          x <- x[-i,-i]
+          break
+        }
+      }
+    }else{
+      break
+    }
+  }
+  if(length(x)==1){
+    print("Det er en DAG!")
+    DAG<-TRUE
+  }else{
+    print("Det er ikke en DAG!")
+    DAG<-FALSE
+  }
+  return(DAG)
+}
+```
+
+# Opgave 1.2: Brug algoritmen i R
+Vi undersøger nu den første graf.
+```{r}
+algoritme(graf1Matrix)
+
+```
+
+Og så den anden.
+```{r}
+algoritme(graf2Matrix)
+
+```
+
+## Opgave 2
+Vi har grafen:
+
+```{r, echo=FALSE}
+graf3<-dag(~smoke+lung|smoke+xray|lung:smoke+bronc|smoke+dysp|bronc:lung)
+par(mfrow=c(1,1))
+plot(graf3)
+graf3Matrix<-as(graf3, "matrix")
+```
+
+Og et udsnit af datasettet chestsim1000, som er simulerede patienter, som kunne have besøgt en torso klinik. Vi ønsker nu at løse de stillede opgaver
+
+# Opgave 2.1 fra CPT'er til Bayisiansk netværk
+Først definerer vi hvilke betingede sandsynligheder hele netværket kan deles op i ud fra den givne DAG, dette kunne også have være gjort den anden vej, altså ud fra dataen ved brug af ciTest. Først tæller vi hvor mange patienter der har henholdsvis yes og no i de forskellige situationer.
+```{r}
+s <- xtabs(~smoke, chestSim1000)
+l_s <- xtabs(~lung+smoke, chestSim1000)
+x_ls <- xtabs(~xray+lung+smoke, chestSim1000)
+b_s <- xtabs(~bronc+smoke, chestSim1000)
+d_lb <- xtabs(~dysp+lung+bronc, chestSim1000)
+```
+Så normaliserer vi
+```{r}
+p.s <- arnormalize(s, "first")
+p.l_s <- arnormalize(l_s, "first")
+p.x_ls <- arnormalize(x_ls, "first")
+p.b_s <- arnormalize(b_s, "first")
+p.d_lb <- arnormalize(d_lb, "first")
+```
+Og laver til sidst netværket
+```{r}
+cpt.list1 <- compileCPT(list(p.s, p.l_s, p.x_ls, p.b_s,  p.d_lb))
+BayNet1 <- grain(cpt.list1)
+BayNet1
+```
+
+Det hele kunne have være gjort i en kommando (næsten, der er vist mere end en kommando, men de er på en linje)
+```{r}
+BayNet2<-grain(compileCPT(extractCPT(chestSim1000,graf3,smooth = 0)))
+BayNet2
+```
+
+# Opgave 2.2 den betingede fordeling af smoke givet dysp
+Vi finder den betingede fordeling af smoke givet dysp; P(smoke|dysp)
+```{r}
+querygrain(BayNet1, nodes=c("smoke","dysp"), type="conditional")
+```
+# Opgave 2.2 betingede fordelinger af lung
+Vi finder først den betingede fordeling af lung givet smoke
+```{r}
+querygrain(BayNet1, nodes=c("lung","smoke"), type="conditional")
+```
+og så den betingede sandsynlighed af lung givet både smoke og bronc
+```{r}
+querygrain(BayNet1, nodes=c("lung","smoke", "bronc"), type="conditional")
+```
+Det ses at informationen om bronc ikke ændrer noget, altså er bronc og lung betingt uafhængige givet smoke. Det kan også bekræftes med en test.
+```{r}
+ciTest(xtabs(~smoke+lung+bronc+dysp+xray,data=chestSim1000),set=c("lung","bronc","smoke"))
+```
+p-værdien er langt over 0.05 hvilket antyder at de er betinget uafhængige.
+
+# Opgave 2.3 flere betingede fordelinger af lung
+Vi finder først den betingede fordeling af lung givet smoke og dysp
+```{r}
+querygrain(BayNet1, nodes=c("lung","smoke","dysp"), type="conditional")
+```
+og så den betingede sandsynlighed af lung givet smoke, dysp og bronc
+```{r}
+querygrain(BayNet1, nodes=c("lung","smoke","dysp","bronc"), type="conditional")
+```
+Det ses at der er ændringer i fordelingerne, altså tilfører bronc information. Vi udfører igen en test for at bekræfte
+```{r}
+ciTest(xtabs(~smoke+lung+bronc+dysp+xray,data=chestSim1000),set=c("lung","bronc","dysp","smoke"))
+```
+og det ses at der ikke er betinget uadhængighed.
+
+
