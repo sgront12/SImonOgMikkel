@@ -1,0 +1,139 @@
+---
+title: "SSKalman"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dlm)
+library(magrittr)
+library(ggplot2)
+library(dplyr)
+library(broom)
+library(changepoint)
+```
+
+## Opgave 2
+Vi tager udgangspunkt i data om kulmineulykker
+```{r, echo=FALSE}
+D = c(4,5,4,1,0,4,3,4,0,6,
+      3,3,4,0,2,6,3,3,5,4,5,3,1,4,4,1,5,5,3,4,2,5,2,2,3,4,
+      2,1,3,2,1,1,1,1,1,3,0,0,1,0,1,1,0,0,3,1,0,3,2,2,0,1,
+      1,1,0,1,0,1,0,0,0,2,1,0,0,0,1,1,0,2,2,3,1,1,2,1,1,1,
+      1,2,4,2,0,0,0,1,4,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0)
+yr = 1851:1962
+N = length(D)
+plot(yr, D,type="p")
+```
+
+# Opgave 2.1
+Ville en klassisk ARIMA model være vejen frem? Umiddelbart nej da den ikke er god til changepoints. Derudover opererer ARIMA med normalfordelinger, og kulmine dataen er nok snarere poissonfordelt.
+
+# Opgave 2.2
+Er der tegn på seriel korrelation? Hvis det konkluderes at data er poissonfordelt, så er der jo ikke, men man kunne også se på det som korreleret, så vi kan bruge state space modeller.
+
+# Opgave 2.3
+Defnér en model, ved hjælp af DLM-pakken.
+```{r}
+ms <- dlm(m0=4, C0=6, FF=1, V=100, GG=1, W=10)
+flt <- dlmFilter(D, mod=ms)
+```
+# Opgave 2.4
+Plot de fittede værdier, samt forecastet
+```{r, echo=FALSE}
+yrp10<-1851:1972
+Dp10<-append(D,c(rep(NA,10)))
+plot(yrp10, Dp10)
+lines(yr, dropFirst(flt$m))
+for1<-dlmForecast(flt, nAhead = 10, method = c("plain"), sampleNew = FALSE)
+for1fp10<-append(rep(NA,length(D)),for1$f)
+lines(yrp10,for1fp10,col=c("red"))
+```
+Forecastet er konstant med værdi:
+```{r, echo=FALSE}
+for1$f[1]
+```
+# Opgave 2.5
+Fit varians parametrene
+```{r}
+
+build.fit <- function(parm){
+  spec <- dlm(m0=4, C0=exp(parm[3]), FF=1, V=exp(parm[1]), GG=1, W=exp(parm[2]))
+  spec
+}
+
+p.fit <- dlmMLE(D, parm=c(1, 1, 1), build.fit)$par
+ms.fit <- build.fit( p.fit )
+flt.fit <- dlmFilter(D, mod=ms.fit)
+```
+# Opgave 2.6
+Plot de fittede værdier, samt forecastet
+```{r, echo=FALSE}
+par(mfrow=c(1,1))
+plot(yrp10, Dp10)
+lines(yr, dropFirst(flt$m))
+lines(yrp10,for1fp10,col=c("red"))
+
+plot(yrp10, Dp10)
+lines(yr, dropFirst(flt.fit$m))
+for2<-dlmForecast(flt.fit, nAhead = 10, method = c("plain"), sampleNew = FALSE)
+for2fp10<-append(rep(NA,length(D)),for2$f)
+lines(yrp10,for2fp10,col=c("red"))
+
+```
+# Opgave 2.7
+Der ser ud til at være et changepoint, hvordan håndterer vi det? Vi identificerer changepointet, her med en funktion i R.
+```{r}
+cpt.mean(D)
+```
+Så forbereder vi en øget varians omkring changepointet.
+```{r}
+x <- rep(1, length(D))
+x[30:45] <- 5
+```
+Sætter DLM op igen
+```{r}
+X <- matrix(x)
+build.cp <- function(parm){
+  Z <- X
+  Z[,1] <- exp(parm[1])*X[,1]
+  spec <- dlm(m0=4, C0=exp(parm[3]), FF=1, V=exp(parm[2]), GG=1, JW=1, W=10, X=Z)
+  spec
+}
+p.cp <- dlmMLE(D, parm=c(1, 1, 1), build.cp)$par
+ms.cp <- build.cp( p.cp )
+flt.cp <- dlmFilter(D, mod=ms.cp)
+
+```
+# Opgave 2.8
+Plot de fittede værdier, samt forecastet
+```{r, echo=FALSE}
+par(mfrow=c(1,1))
+plot(yrp10, Dp10)
+lines(yr, dropFirst(flt$m))
+lines(yrp10,for1fp10,col=c("red"))
+
+plot(yrp10, Dp10)
+lines(yr, dropFirst(flt.fit$m))
+for2<-dlmForecast(flt.fit, nAhead = 10, method = c("plain"), sampleNew = FALSE)
+for2fp10<-append(rep(NA,length(D)),for2$f)
+lines(yrp10,for2fp10,col=c("red"))
+
+plot(yrp10, Dp10)
+lines(yr, dropFirst(flt.cp$m))
+
+build.cpshort <- function(parm){
+  spec <- dlm(m0=4, C0=exp(parm[3]), FF=1, V=exp(parm[1]), GG=1, W=exp(parm[2]))
+  spec
+}
+Dshort<-D[1:length(D)]
+p.cpshort <- dlmMLE(Dshort, parm=c(1, 1, 1), build.cpshort)$par
+ms.cpshort <- build.cpshort( p.cpshort )
+flt.cpshort <- dlmFilter(Dshort, mod=ms.cpshort)
+for3<-dlmForecast(flt.cpshort, nAhead = 10, method = c("plain"), sampleNew = FALSE)
+for3fp10<-append(rep(NA,length(D)),for3$f)
+lines(yrp10,for3fp10,col=c("red"))
+```
+
+# Opgave 2.9
+Hvad kan vi så sige om det hele?
