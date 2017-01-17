@@ -1,0 +1,179 @@
+---
+title: "Eksamensspørgsmål 3: Bayesianske netværk"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gRbase)
+library(gRain)
+library(gRim)
+library(Rgraphviz)
+data(chestSim1000, package="gRbase")
+```
+## Opgave 1
+
+
+```{r, echo=FALSE}
+graf1<-dag(~S+L|S+X|L:S+B|S+D|L:B)
+graf2<-dag(~S|X+L|S+X|L+B|S+D|L:B)
+par(mfrow=c(1,2))
+plot(graf1)
+plot(graf2)
+graf1Matrix<-as(graf1, "matrix")
+graf2Matrix<-as(graf2, "matrix")
+```
+
+
+```{r, echo=FALSE}
+graf1Matrix
+graf2Matrix
+```
+
+# Opgave 1.1
+
+```{r}
+algoritme <- function(x){
+  while(length(x)>1){
+    sum = rowSums(x)
+    if(any(sum==0)==TRUE){
+      for(i in 1:nrow(x)){
+        if(sum[i]==0){ 
+          x <- x[-i,-i]
+          break
+        }
+      }
+    }else{
+      break
+    }
+  }
+  if(length(x)==1){
+    print("Det er en DAG!")
+    DAG<-TRUE
+  }else{
+    print("Det er ikke en DAG!")
+    DAG<-FALSE
+  }
+  return(DAG)
+}
+```
+
+# Opgave 1.2
+
+```{r}
+algoritme(graf1Matrix)
+
+```
+
+```{r}
+algoritme(graf2Matrix)
+
+```
+
+## Opgave 2
+
+```{r, echo=FALSE}
+graf3<-dag(~smoke+lung|smoke+xray|lung:smoke+bronc|smoke+dysp|bronc:lung)
+par(mfrow=c(1,1))
+plot(graf3)
+graf3Matrix<-as(graf3, "matrix")
+```
+
+# Opgave 2.1 
+```{r}
+s <- xtabs(~smoke, chestSim1000)
+l_s <- xtabs(~lung+smoke, chestSim1000)
+x_ls <- xtabs(~xray+lung+smoke, chestSim1000)
+b_s <- xtabs(~bronc+smoke, chestSim1000)
+d_lb <- xtabs(~dysp+lung+bronc, chestSim1000)
+```
+
+```{r}
+p.s <- arnormalize(s, "first")
+p.l_s <- arnormalize(l_s, "first")
+p.x_ls <- arnormalize(x_ls, "first")
+p.b_s <- arnormalize(b_s, "first")
+p.d_lb <- arnormalize(d_lb, "first")
+```
+
+```{r}
+cpt.list1 <- compileCPT(list(p.s, p.l_s, p.x_ls, p.b_s,  p.d_lb))
+BayNet1 <- grain(cpt.list1)
+BayNet1
+```
+
+
+```{r}
+BayNet2<-grain(compileCPT(extractCPT(chestSim1000,graf3,smooth = 0)))
+BayNet2
+```
+
+# Opgave 2.2 den betingede fordeling af smoke givet dysp
+Vi finder den betingede fordeling af smoke givet dysp; P(smoke|dysp)
+```{r}
+querygrain(BayNet1, nodes=c("smoke","dysp"), type="conditional")
+```
+# Opgave 2.3 betingede fordelinger af lung
+Vi finder først den betingede fordeling af lung givet smoke
+```{r}
+querygrain(BayNet1, nodes=c("lung","smoke"), type="conditional")
+```
+og så den betingede sandsynlighed af lung givet både smoke og bronc
+```{r}
+querygrain(BayNet1, nodes=c("lung","smoke", "bronc"), type="conditional")
+```
+
+```{r}
+ciTest(xtabs(~smoke+lung+bronc+dysp+xray,data=chestSim1000),set=c("lung","bronc","smoke"))
+```
+
+
+# Opgave 2.4 flere betingede fordelinger af lung
+Vi finder først den betingede fordeling af lung givet smoke og dysp
+```{r}
+querygrain(BayNet1, nodes=c("lung","smoke","dysp"), type="conditional")
+```
+og så den betingede sandsynlighed af lung givet smoke, dysp og bronc
+```{r}
+querygrain(BayNet1, nodes=c("lung","smoke","dysp","bronc"), type="conditional")
+```
+Det ses at der er ændringer i fordelingerne, altså tilfører bronc information. Vi udfører igen en test for at bekræfte
+```{r}
+ciTest(xtabs(~smoke+lung+bronc+dysp+xray,data=chestSim1000),set=c("lung","bronc","dysp","smoke"))
+```
+og det ses at der ikke er betinget uadhængighed.
+
+# Opgave 2.5 messagepassing algoritme
+```{r,include=FALSE}
+q1.XLS=arprod(p.x_ls,p.s);q1.XLS
+q2.SLB=arprod(p.l_s,p.b_s);q2.SLB
+q3.LBD=p.d_lb;q3.LBD
+```
+Vi collecter evidence
+```{r}
+q3.LB=armarg(q3.LBD,c("lung","bronc"))
+q3.LBD=ardiv(q3.LBD,q3.LB)
+q2.SLB=armult(q2.SLB, q3.LB)
+
+q2.SL=armarg(q2.SLB,c("smoke","lung"))
+q2.SLB=ardiv(q2.SLB,q2.SL)
+q1.XLS=armult(q1.XLS, q2.SL)
+
+```
+Vi distrubuter evidence
+```{r}
+
+q1.SL=armarg(q1.XLS,c("smoke","lung"))
+q2.SLB=armult(q2.SLB,q1.SL)
+
+q2.LB=armarg(q2.SLB,c("lung","bronc"))
+q3.LBD=armult(q3.LBD,q2.LB)
+
+```
+Og så udregner vi klikemarginalerner
+```{r}
+p.XLS=q1.XLS;p.XLS
+p.SLB=q2.SLB;p.SLB
+p.LBD=q3.LBD;p.LBD
+```
+

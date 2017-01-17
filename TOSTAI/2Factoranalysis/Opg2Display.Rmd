@@ -12,16 +12,10 @@ library(nFactors)
 
 ## Opgave 2
 
-Her følger eksamensspørgsmål 2, opgave 2.
-Vi undersøger datasættet "carcass" som indeholder 14 variable, som beskriver slagtede svin.
-
-Vi starter med et korrelationsplot.
 
 ```{r, echo=FALSE }
 corrplot::corrplot(cor(carcass_fa), order = "hclust", tl.col='black', tl.cex=.75)
 ```
-
-Herover ses det, at der tegner sig tre grupperinger, altså allerede nu kan vi gætte på at tre faktorer ville være optimalt. Det er værd at bemærke, hvordan variablen "weight" ikke rigtigt tilhører nogen af grupperingerme.
 
 ```{r, include=FALSE}
 carcass <- as.data.frame(scale(carcass_fa))
@@ -32,21 +26,22 @@ carcass <- as.data.frame(scale(carcass_fa))
 (carcass_eigen <- eigen(cov(carcass))$value)
 ```
 
-Og konkluderer endnu en gang at 3 faktorer er et godt bud. Altså finder vi nu de tre faktorer.
 
 ```{r}
 FactAnalNoRota <- factanal(carcass, factors = 3, rotation = "none", na.action = na.omit);FactAnalNoRota
+```
+
+
+```{r}
 FactAnalNoRota7 <- factanal(carcass, factors = 7, rotation = "none", na.action = na.omit);FactAnalNoRota7
 ```
 
-På plottet herunder, kan vi se hvorledes de enkelte variable korrelerer med to af de tre faktorer.
 ```{r, echo=FALSE }
 par(mfrow=c(1,1))
 plot(FactAnalNoRota$loadings[,1:2], type="n") # set up plot
 text(FactAnalNoRota$loadings[,1:2],labels=rownames(FactAnalNoRota$loadings),cex=.7)
 ```
 
-For at få tre faktorer, som i højere grad kunne definere kategorier som kød, fedt og vægt, kan vi rotere faktorerne. Her er først et plot af alle tre uroterede faktoer mod hinanden hver især, derunder ses et plot efter rotationen.
 ```{r}
 FactAnalVarimaxRota = factanal(carcass, factors = 3, rotation = "varimax",na.action = na.omit, scores = "regression");FactAnalVarimaxRota
 ```

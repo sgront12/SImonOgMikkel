@@ -27,10 +27,10 @@ plot(yr, D,type="p")
 ```
 
 # Opgave 2.1
-Ville en klassisk ARIMA model være vejen frem? Umiddelbart nej da den ikke er god til changepoints. 
+Ville en klassisk ARIMA model være vejen frem?
 
 # Opgave 2.2
-Er der tegn på seriel korrelation? Hvis det konkluderes at data er poissonfordelt, så er der jo ikke, men man kunne også se på det som korreleret, så vi kan bruge state space modeller.
+Er der tegn på seriel korrelation?
 ```{r, echo=FALSE}
 acf(D)
 ```
@@ -94,7 +94,7 @@ Forecastet af den fittede model er også konstant med værdi:
 for2$f[1]
 ```
 # Opgave 2.7
-Der ser ud til at være et changepoint, hvordan håndterer vi det? Vi identificerer changepointet, her med en funktion i R.
+Der ser ud til at være et changepoint, hvordan håndterer vi det?
 ```{r}
 cpt.mean(D)
 ```
@@ -161,6 +161,4 @@ flt.cp$m[113]
 
 # Opgave 2.9
 Hvad kan vi så sige om det hele?
-
-Det bliver bedre og bedre.
 
