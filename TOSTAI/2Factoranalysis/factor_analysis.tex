@@ -96,6 +96,61 @@ the exercise and presentation.
   i.e.\ $\bmf$ is regressed on $\bx$.
 \end{enumerate}
 
+
+	** 1.2 **
+	For scores = "regression" bruger vi metoden Thomson (1951). Lad $\tilde{f} = A(x-\mu)$ og vis, at det udtryk der minimer $\mathbb{E}[||\tilde{f}-f||^2]$ er givet ved 
+	
+	\begin{center}
+		$\tilde{f} = \Lambda^T(\Lambda\Lambda^T+\Psi)^{-1}(x-\mu)$
+	\end{center}
+	
+	** Besvarelse **
+	
+	Starter med at udregne udtrykket for $\mathbb{E}[||\tilde{f}-f||^2]$
+	
+	\begin{center}
+		$\mathbb{E}[||\tilde{f}-f||^2]=\mathbb{E}[(\tilde{f}-f)^T(\tilde{f}-f)]$
+		
+		$=\mathbb{E}[(Ay-f)^T(Ay-f)]=\mathbb{E}[\text{tr}\lbrace(Ay-f)^T(Ay-f)\rbrace]$
+		
+		$=\text{tr}\mathbb{E}[(y^TA^TAy]+\mathbb{E}[f^Tf]-2\mathbb{E}[y^TA^Tf]$
+		
+		$=\mathbb{E}[\text{tr}(A^TAyy^T)]+\text{tr}(I_k)-2\text{tr}(\mathbb{E}[A^Tfy^T])$
+		
+		$=\text{tr}(A^T A \mathbb{E}[yy^T] ) + k-2\text{tr}\lbrace A^T\mathbb{E}[f(\Lambda f+\varepsilon)^T] \rbrace$
+		
+		$=\text{tr}(A^T A \mathbb{E}[(x-\mu)(x-\mu)^T] ) + k-2\text{tr}\lbrace A^T\mathbb{E}[ff^T)\Lambda^T] \rbrace$
+		
+		$=\text{tr}\lbrace A^TA\Sigma\rbrace +k-2\text{tr}\lbrace A^T\Lambda^T\rbrace$
+	\end{center}
+	
+	Dernæst tages den afledte af ovenstående resultat og sættes lig 0
+	
+	\begin{center}
+		$\frac{\partial}{\partial A}\mathbb{E}[||\tilde{f}-f||^2]=0$
+	\end{center}
+	
+	Den afledte af $\mathbb{E}[||\tilde{f}-f||^2]$ mht. A er givet ved
+	
+	\begin{center}
+		$A\Sigma+(A^T)^T\Sigma^T-2\Lambda^2=0$
+	\end{center}
+	
+	A isoleres i udtrykket
+	
+	\begin{center}
+		$2A\Sigma=2\Lambda^T\Rightarrow A=\Lambda^T\Sigma^{-1}=\Lambda^T(\Lambda\Lambda^T+\Psi)^{-1}$
+	\end{center}
+	
+	Ovenstående udtryk for A indsættes i det givne udtryk for $\tilde{f}$
+	
+	\begin{center}
+		$\tilde{f}=A(x-\mu)=\Lambda^T(\Lambda\Lambda^T+\Psi)^{-1}(x-\mu)$
+	\end{center}
+	
+	Dermed er resultatet bevist.
+
+
 In the discussion of the EM algorithm in the lecture, the result in
 the M-step for $\Psi^{(t+1)}$ relied on the most recent estimate of
 $\Lm^{(t+1)}$ (not $\Lm^{(t)}$ as would be the usual case in an EM
