@@ -158,7 +158,3 @@ Vi har ikke kunnet forecaste med den sædvanlige funktion i changepoint modellen
 ```{r, echo=FALSE}
 flt.cp$m[113]
 ```
-
-# Opgave 2.9
-Hvad kan vi så sige om det hele?
-
