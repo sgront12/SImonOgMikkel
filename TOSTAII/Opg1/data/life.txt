@@ -1,0 +1,6 @@
+LifeExp = 1992 Life expectancy at birth Table 1, p. 129, Human Development Report, 1994
+TV = Televisions per 100 people Table 2, pp. 132-3 and Table 28, p. 184
+PopDoc = Population per doctor (1990), Table 12, pp. 152-3, Table 35, p. 191
+GDP = real GDP per capita (PPP) - Table 2, pp. 132-3, Table 28, p. 184
+
+Source: Human Development Report, 1994
