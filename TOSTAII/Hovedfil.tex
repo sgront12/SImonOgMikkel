@@ -1,0 +1,195 @@
+\documentclass[12pt]{report}
+
+%Formattering
+
+%Font og sprog
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[danish]{babel}
+\usepackage{caption}
+
+%Page layout
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm, twoside]{geometry}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{bm}
+\usepackage{fancyhdr} %Header og footer, på alle normale sider
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[L]{\rightmark }
+\fancyfoot{}
+\fancyfoot[R]{\bfseries \thepage}
+\fancyfoot[L]{\leftmark}
+\renewcommand{\footrulewidth}{1pt}
+\renewcommand{\chaptername}{Spørgsmål}
+\usepackage{pgf,tikz}
+\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+
+\usepackage[toc,page]{appendix}
+
+
+%Diverse brugbare pakker
+
+\usepackage{comment}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{framed}
+\usepackage{etoolbox}
+\usepackage[framed,amsmath,thmmarks]{ntheorem}
+%Diverse Envirronments
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}[lemma]{Proposition}
+\newtheorem{theorem}[lemma]{Opgave}
+\newtheorem{remark}[lemma]{Remark} 
+\newtheorem{definition}[lemma]{Definition}
+\theoremheaderfont{\normalfont\bfseries}
+\theorembodyfont{\normalfont}
+\theoremstyle{break}
+\def\theoremframecommand{\colorbox[rgb]{1,.9,.9}}
+\newshadedtheorem{eksempel}[lemma]{Eksempel}
+\newenvironment{eks}[1]{%
+		\begin{eksempel}[#1]
+}{%
+		\end{eksempel}
+}
+\newtheorem*{proof}{Bevis}
+\newenvironment{pro}{\begin{bevis}}{\end{bevis}}
+\AtEndEnvironment{proof}{$\null\hfill\blacksquare$}
+\theoremstyle{break}
+\newenvironment{AMS}{}{}
+\newenvironment{keywords}{}{}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bparam}{{\bm{\theta}}}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bZ}{\mathbf{Z}}
+\newcommand{\bparammax}{\widehat{\bparam}\left(\by\right)}
+\newcommand{\bParammax}{\widehat{\bparam}\left(\bY\right)}
+\newcommand{\like}{L\left(\by,\bparam\right)}
+\newcommand{\E}[1]{\mathrm{E}\left[#1\right]}
+\newcommand{\Var}[1]{\mathrm{Var}\left[#1\right]}
+\newcommand{\Pois}{\text{Pois}}
+\newcommand{\hatB}{\widehat{\bm{\beta}}}
+\newcommand{\bmu}{\bm{\mu}}
+\newcommand{\bbeta}{\bm{\beta}}
+\newcommand{\btheta}{\bm{\theta}}
+\newcommand{\bttheta}[1]{\btheta^{(#1)}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ts}{\tilde{\sigma}}
+\newcommand{\FS}{\mathcal{S}}
+\newcommand{\tps}{T_p\FS}
+\newcommand{\G}{\mathcal{G}}
+\newcommand{\W}{\mathcal{W}}
+\newcommand{\FI}{\mathcal{F}}
+\newcommand{\FII}{\mathcal{F}_{II}}
+\newcommand{\sprime}{^{\prime}}
+\newcommand{\dprime}{^{\prime\prime}}
+\newcommand{\GI}{\Gamma_{11}}
+\newcommand{\GII}{\Gamma_{12}}
+\newcommand{\GIII}{\Gamma_{22}}
+\newcommand{\obs}{_{\text{obs}}}
+\newcommand{\mis}{_{\text{mis}}}
+\newcommand{\pdif}[1]{\frac{\partial}{\partial #1}}
+\newcommand{\lr}[1]{\left(#1\right)}
+\newcommand{\bv}{\Big\vert_{\btheta=\bttheta{t}}}
+\newcommand{\norm}[1]{\|#1\|}
+\DeclareMathOperator{\tr}{trace}
+\DeclareMathOperator{\inte}{int}
+\DeclareMathOperator{\spa}{span}
+\DeclareMathOperator*{\Argmax}{arg\,max}
+\newcommand\secs{%
+  \newpage
+  \section*{Eksamensopgaver \thechapter}%
+  \addcontentsline{toc}{chapter}{Opgave \thechapter}
+  \addtocounter{chapter}{1}
+  }
+    \setcounter{tocdepth}{1}
+\setcounter{chapter}{1}
+\title{Topics in Statistical Sciences}
+\author{Mikkel Findinge}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\definecolor{qqqqff}{rgb}{0.,0.,1.}
+\definecolor{zzttqq}{rgb}{0.6,0.2,0.}
+
+\secs
+Sørens del - se \texttt{R}-kode.
+
+\secs
+\subsection*{1. Vis, at ved at udvide responsen $\by$ og design matricen $\bX$ på tilpas vis kan ridge regressions estimatoren opnås fra OLS udtrykket $(\widetilde{\bX}^\top\widetilde{\bX})^{-1}\widetilde{\bX}\widetilde{\by}$, hvor $\widetilde{\by}$ og $\widetilde{\bX}$ er udvidelserne.}
+Ridge regressions estimatoren er givet ved
+\[\min\limits_{\bbeta}\norm{\by - \bX\bbeta}_2^2 + \lambda\norm{\bbeta}_2^2.\]
+Vi kan lave små omskrivninger
+\begin{align*}
+	\min\limits_{\bbeta}\norm{\by - \bX\bbeta}_2^2 + \lambda\norm{\bbeta}_2^2 & = \min\limits_{\bbeta}\norm{\by - \bX\bbeta}_2^2 + \norm{\sqrt{\lambda}\bbeta}_2^2 \\ & = \min\limits_{\bbeta}\norm{\by - \bX\bbeta}_2^2 + \norm{0-\sqrt{\lambda}I\bbeta}_2^2
+\end{align*}
+Sætter vi $\widetilde{\by} = [\by~~0]^\top$ og $\widetilde{\bX}= [\bX~~\sqrt{\lambda}I]^\top$ kan vi opskrive:
+\[\min\limits_{\bbeta}\norm{\widetilde{\by} - \widetilde{\bX}\bbeta}_2^2.\]
+Nu ved vi altså, hvordan de udvidede vektorer og matricer ser ud for at omskrive ridge regression til ordinary least squares. Vi betragter nu OLS udtrykket:
+\[\widehat{\bbeta} = (\widetilde{\bX}^\top\widetilde{\bX})^{-1}\widetilde{\bX}^\top\widetilde{\by}=\left([\bX^\top~~ I\sqrt{\lambda}]\begin{bmatrix}\bX\\\sqrt{\lambda}I\end{bmatrix}\right)^{-1}[\bX^\top ~~\sqrt{\lambda}I]\begin{bmatrix}\by\\0\end{bmatrix} = (\bX^\top\bX + \lambda I)^{-1}\bX^\top\by.\]
+Hvilket var, hvad vi skulle vise.
+
+\subsection*{2. Vis hvordan $\ell_Q(\beta_0,\bbeta)$ opnås fra \[\ell(\beta_0,\bbeta) = \frac{1}{n}\sum_{i=1}^{n}\left[y_i(\beta_0+\bX_i^\top\bbeta)-\log(1+\exp\{\beta_0+\bX_i^\top\bbeta\})\right].\]}
+
+\secs
+Sørens del - se \texttt{R}-kode.
+
+\secs
+\subsection*{1a. Vis, at $S(\bbeta)=\norm{\bX\bbeta-\by}_2^2$ kan blive dekomponeret, sådan at
+	\[S(\bbeta)=\norm{Q_1^\top(\bX\bbeta-\by)}_2^2+\norm{Q_2^\top\by}_2^2.\]}
+Den ortogonale matrix $Q=[Q_1~~Q_2]$ er en rotation. Denne vil altså ikke påvirke $S(\bbeta)$, som er en længde. Vi har:
+\[S(\bbeta)=\norm{\bX\bbeta-\by}_2^2 = \norm{Q^\top(\bX\bbeta-\by)}_2^2 = (\bX\bbeta-\by)^\top QQ^\top(\bX\bbeta-\by).\]
+Da $Q=[Q_1~~Q_2]$ er $QQ^\top=[Q_1~~Q_2][Q_1~~Q_2]^\top = Q_1Q_1^\top+Q_2Q_2^\top$. Men så kan ovenstående omskrives til
+ \[(\bX\bbeta-\by)^\top QQ^\top(\bX\bbeta-\by)=(\bX\bbeta-\by)^\top (Q_1Q_1^\top+Q_2Q_2^\top)(\bX\bbeta-\by).\]
+ Vi ganger ind på hver af ledene i parentesen, således vi får:
+ \[(\bX\bbeta-\by)^\top Q_1Q_1^\top(\bX\bbeta-\by)+(\bX\bbeta-\by)^\top Q_2Q_2^\top(\bX\bbeta-\by) = \norm{Q_1^\top(\bX\bbeta-\by)}_2^2+\norm{Q_2^\top(\bX\bbeta-\by)}_2^2.\]
+ Husk, at vi arbejder med en $QR$-faktorisering af $X$, hvor $R=[R_1~~0]^\top$, hvorfor $X=QR=[Q_1~~Q_2][R_1~~0]^\top=Q_1R_1$. Vi omskriver således:
+ \[\norm{Q_1^\top(\bX\bbeta-\by)}_2^2+\norm{Q_2^\top(\bX\bbeta-\by)}_2^2 =  \norm{Q_1^\top(\bX\bbeta-\by)}_2^2+\norm{Q_2^\top(Q_1R_1\bbeta-\by)}_2^2.\]
+ Men $Q=[Q_1~~Q_2]$ er en ortogonal matrix, hvorfor søjlevektorerne er indbyrdes ortogonale. Dermed er $Q_2^\top Q_1 = 0$. Vi får ved at gange ind i sidste parentes:
+ \[\norm{Q_1^\top(\bX\bbeta-\by)}_2^2+\norm{Q_2^\top Q_1R_1\bbeta-Q_2^\top\by}_2^2 =\norm{Q_1^\top(\bX\bbeta-\by)}_2^2+\norm{Q_2^\top\by}_2^2 .\]
+ 
+ \subsection*{1b. For $\hat{\bbeta}=(\bX^\top\bX)^{-1}\bX^\top\by$, vis at $S(\hat{\bbeta})=\norm{Q_2^\top\by}_2^2.$}
+ Vi indsætter blot estimatet for $\bbeta$ i dekomponeringen fra før. Vi skal blot vise, at \[\norm{Q_1^\top(\bX(\bX^\top\bX)^{-1}\bX^\top\by-\by)}=0.\]
+ Vi omskriver og får:
+ \[(\bX(\bX^\top\bX)^{-1}\bX^\top\by-\by)^\top Q_1Q_1^\top(\bX(\bX^\top\bX)^{-1}\bX^\top\by-\by).\]
+ Husk, at $\bX=Q_1R_1$, hvor $R_1$ er en $p\times p$-matrix med fuld rank (ergo invertibel), dermed kan vi skrive $\bX R_1^{-1} = Q_1$, hvorfor vi får:
+  \[(\bX(\bX^\top\bX)^{-1}\bX^\top\by-\by)^\top XR_1^{-1}R_1^{-1\top}\bX^\top(\bX(\bX^\top\bX)^{-1}\bX^\top\by-\by).\]
+ Ganger vi $R_1^{-1\top}\bX^\top$ ind i parentesen yderst til højre fås:
+ \[R_1^{-1\top}\bX^\top(\bX(\bX^\top\bX)^{-1}\bX^\top\by-\by) = R_1^{-1\top}\bX^\top\bX(\bX^\top\bX)^{-1}\bX^\top\by-R_1^{-1\top}\bX^\top\by\]
+ Bemærk, at $\bX^\top\bX$ er ganget på $(\bX^\top\bX)^{-1}$, altså går disse ud med hinanden. Vi har:
+ \[R_1^{-1\top}\bX^\top\bX(\bX^\top\bX)^{-1}\bX^\top\by-R_1^{-1\top}\bX^\top\by = R_1^{-1\top}\bX^\top\by-R_1^{-1\top}\bX^\top\by = 0.\]
+ Dermed har vi vist, at
+ \[\norm{Q_1(\bX\hat{\bbeta}-\by)}=0.\]
+ 
+\clearpage
+ 
+\subsection*{2a. Lad $y_i=f(x_i,(\alpha,\beta))$, hvor $f$ er en rationel funktion. Angiv en procedure til at opnå gode startværdier for $\alpha$ og $\beta$ baseret på data $(x,y)$.}
+Vi betragter
+\[y_i = \frac{\alpha_0+\alpha_1 x_i+\alpha_2x_i^2 +\ldots+\alpha_p x_i^p}{\beta_0+\beta_1 x_i+\beta_2 x_i^2+\ldots+\beta_q x_i^q},\]
+hvor $\beta_0 \equiv 1$ for at undgå overparametrisering.
+Vi ganger med nævneren på begge sider og får:
+\[y_i(1+\beta_1 x_i+\beta_2 x_i^2+\ldots+\beta_q x_i^q) = \alpha_0+\alpha_1 x_i+\alpha_2x_i^2 +\ldots+\alpha_p x_i^p,\]
+ Gang $y_i$ ind i parentesen og få:
+ 
+ \[y_i+\beta_1 x_iy_i+\beta_2 x_i^2y_i+\ldots+\beta_q x_i^qy_i = \alpha_0+\alpha_1 x_i+\alpha_2x_i^2 +\ldots+\alpha_p x_i^p,\]
+ Vi isolerer $y_i$ og får:
+ \[y_i = \alpha_0+\alpha_1 x_i+\alpha_2x_i^2 +\ldots+\alpha_p x_i^p-\beta_1 x_iy_i-\beta_2 x_i^2y_i-\ldots-\beta_q x_i^qy_i.\]
+ For \[\alpha = \begin{bmatrix}\alpha_0\\\alpha_1\\\vdots\\\alpha_p\end{bmatrix},~~~~\beta = \begin{bmatrix}\beta_1\\\beta_2\\\vdots\\\beta_q\end{bmatrix},\]
+ kan vi opstille ligningen på formen:
+ \[y_i = \begin{bmatrix}1 & x_i & x_i^2 & \ldots & x_i^p & x_iy & x_i^2y & \ldots & x_i^qy \end{bmatrix}\begin{bmatrix}\alpha\\\beta\end{bmatrix}.\]
+ Vi kan altså for $N=p+q+1$ par af $(x,y)$-punkter estimere parametrene ved at løse følgende sæt af ligningssystemer:
+ \[\begin{bmatrix}y_1\\y_2\\\vdots\\y_{N}\end{bmatrix} = \begin{bmatrix}
+ 1 & x_1 & x_1^2 & \ldots & x_1^p & x_1y & x_1^2y & \ldots & x_1^qy \\
+ 1 & x_2 & x_2^2 & \ldots & x_2^p & x_2y & x_2^2y & \ldots & x_2^qy \\
+  &  &  &  & \vdots & & & & \\
+ 1 & x_N & x_N^2 & \ldots & x_N^p & x_Ny & x_N^2y & \ldots & x_N^qy
+ \end{bmatrix}\begin{bmatrix}\alpha\\\beta\end{bmatrix}.\]
+\end{document}
