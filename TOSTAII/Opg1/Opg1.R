@@ -1,39 +1,90 @@
-#EX 1
-#' # Picloram data
-#' 
-#' Picloram is a herbicide used for plant control and Turner
-#' et. al. (1992) examined the effect of varying doses of Picloram for
-#' control of tall larkspur (ridderspore). Four different doses of
-#' Picloram (0, 1.1, 2.2, 4.5 kg/ha) were used on in total 313 plants
-#' located in three areas (called `replicate` in the dataset). For
-#' each of the plants it was recorded whether the plant was killed or
-#' not.
+ct <- read.table("data/clottingTime.txt", header=T)
+ct
+library(ggplot2)
+source("multiplot.R")
+multiplot(qplot(log2(conc), lot1, data=ct),
+          qplot(log2(conc), 1/lot1, data=ct),
+          qplot(log2(conc), log(lot1), data=ct), cols=3)
 
-picloram <- read.table("data/picloram.txt", header=TRUE)
-picloram
-require(ggplot2)
-qplot(dose, dead/total, data=picloram, colour=replicate, geom=c("point","line"))
+g1a <- glm(lot1 ~ log2(conc), family=Gamma("inverse"), data=ct)
+g1a
 
-#' The overall questions are: How lethal is the herbicide at different
-#' doses and is there a difference in effect of dosis in the different
-#' locations.
-#' 
-#' What would a good model be? Fit such a model? Discuss pros and cons
-#' of different models. Does it fit well to data? Interpret the
-#' parameters. What do you conclude?
+g1b <- glm(lot1 ~ log2(conc), family=Gamma("log"), data=ct)
+g1b
 
-#' NB: A sigmoid curve can look like this
-x <- seq(0.01, 0.99, 0.01)
-qplot(log(x/(1-x)), x, xlab="Logit(theta)", ylab=expression(theta), geom="line")
+g1c <- glm(lot1 ~ log2(conc), family=Gamma("identity"), data=ct)
+g1c
 
-#' These code fragments may come in handy.
-picloram <- transform(picloram, elogit=log((dead + 0.5)/(total - dead + 0.5)))
-qplot(dose, elogit, data=picloram, colour=replicate, geom=c("point","line"))
+f<- Gamma("inverse")
+summary(f)
+?lm.fit
+require(utils)
 
-logreg1 <- glm( cbind( dead, total - dead ) ~ replicate + dose, family=binomial, 
-                data=picloram)
+formula <- lot1 ~ log2(conc)
+y <- model.response(model.frame(formula, data=ct))
+X <- model.matrix(formula, data=ct)
+y
+lm. <- lm.fit (x = X, y = y)
 
-coef(summary(logreg1))
+set.seed(129)
 
 
 
+if(require("microbenchmark")) {
+  mb <- microbenchmark(lm(y~X), lm.fit(X,y), .lm.fit(X,y))
+  print(mb)
+
+
+
+fit_gamma <- function(formula, data, link="inverse", phi=NULL, w=NULL){
+  y <- model.response(model.frame(formula, data=data))
+  X <- model.matrix(formula, data=data)
+  f <- Gamma(link)
+  g <- f$linkfun
+  g.inv <- f$linkinv
+  g.der <- Deriv::Deriv(g, "mu")
+  V <- f$variance
+  if (is.null(w))
+    w <- rep(1, length(y))
+  conv.eps <- 1e-12
+  ## Get started; intitial value of z and beta
+  lm. <- lm.fit(x = X, y = y)
+g(y)
+  
+  beta_star <- lm.$coefficients
+
+  ## Iterate until beta no longer changes
+  repeat{
+    eta_star <- X%*%beta_star
+    mu_star <- g.inv(eta_star)
+    z_star <- g(mu_star)+g.der(mu_star)*(y-mu_star)
+    v_star <- (g.der(mu_star)^2*V(mu_star))/w
+    if(link=="identity"){H <- diag(rep(1,length(y)))}
+    else{H <- diag(g.der(mu_star)[,1])}
+    sigma <- diag(v_star[,1])
+    #r <- H%*%(y-mu_star)
+    #z=X%*%beta_star+r
+    beta_hat <- solve(t(X)%*%solve(sigma)%*%X)%*%t(X)%*%solve(sigma)%*%z_star
+    if(sum(abs(beta_star-beta_hat)<conv.eps)==ncol(X)){break}
+    beta_star <- beta_hat
+    # break the loop when beta stops changing between succesive
+    # iterations.
+  }
+    ## Compute mu and working weights v after final iteration
+    ## Estimate phi if necessary
+    ## Compute estimated covariance matrix of regression parameters
+    ## Compute Pearson residuals
+    out <- list( ## Fill in your values
+      coef = NULL,
+      vcov = NULL,
+      phi  = NULL,
+      resid= NULL,
+      fit  = NULL,
+      p    = NULL)
+  out 
+}
+
+a <- c(1,2,3,4,5)
+b <- c(2,3,4,77,6)
+a-b
+if(sum(abs(a-b))<2){print("tis")}
