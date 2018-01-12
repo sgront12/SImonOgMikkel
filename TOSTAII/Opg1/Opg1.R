@@ -24,8 +24,9 @@ fit_gamma <- function(formula, data, link="inverse", phi=NULL, w=NULL){
     mu_star <- g.inv(eta_star)
     z_star <- g(mu_star)+g.der(mu_star)*(y-mu_star)
     v_star <- (g.der(mu_star)^2*V(mu_star))/w
-    if(link=="identity"){H <- diag(rep(1,length(y)))}else{H <- diag(g.der(mu_star)[,1])}
+    #if(link=="identity"){H <- diag(rep(1,length(y)))}else{H <- diag(g.der(mu_star)[,1])}
     sigma <- diag(v_star[,1])
+    #sigma <- diag(v_star)
     #r <- H%*%(y-mu_star)
     #z=X%*%beta_star+r
     beta_hat <- solve(t(X)%*%solve(sigma)%*%X)%*%t(X)%*%solve(sigma)%*%z_star
@@ -37,16 +38,19 @@ fit_gamma <- function(formula, data, link="inverse", phi=NULL, w=NULL){
   ## Compute mu and working weights v after final iteration
   mu_hat <- g.inv(X%*%beta_hat)
   ## Estimate phi if necessary
-  phi_hat <- (1/(nrow(X)-ncol(X)))*sum(((y-mu_hat)^2)/(V(mu_hat)/w))
+  p <- ncol(X)
+  phi_hat <- (1/(nrow(X)-p))*sum(((y-mu_hat)^2)/(V(mu_hat)/w))
   ## Compute estimated covariance matrix of regression parameters
+  vcov <- phi_hat*solve(t(X)%*%solve(sigma)%*%X)
   ## Compute Pearson residuals
+  pearson_resid <- (y-mu_hat)/sqrt(V(mu_hat)/w)
   out <- list( 
     coef = beta_hat,
-    vcov = NULL,
+    vcov = vcov,
     phi  = phi_hat,
-    resid= NULL,
+    resid= pearson_resid,
     fit  = mu_hat,
-    p    = NULL)
+    p    = p)
   out 
 }
 multiplot(qplot(log2(conc), lot1, data=ct),
@@ -55,9 +59,11 @@ multiplot(qplot(log2(conc), lot1, data=ct),
 
 g1a <- glm(lot1 ~ log2(conc), family=Gamma("inverse"), data=ct)
 fga <- fit_gamma(lot1 ~ log2(conc),link = "inverse",data=ct)
-g1a$coefficients
-fga$coef
-
+g1a$coefficients-fga$coef
+summa1 <- summary(g1a)
+summa1$cov.scaled-fga$vcov
+resid(g1a,type = "pearson")
+fga$resid
 
 g1b <- glm(lot1 ~ log2(conc), family=Gamma("log"), data=ct)
 fgb <- fit_gamma(lot1 ~ log2(conc),link = "log",data=ct)
@@ -69,9 +75,9 @@ fgc <- fit_gamma(lot1 ~ log2(conc),link = "identity",data=ct)
 g1c$coefficients
 fgc$coef
 
-
-
-
+fga$resid
+fgb$resid
+fgc$resid
 
 
 
