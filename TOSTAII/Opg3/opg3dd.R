@@ -105,5 +105,5 @@ fit_normal_gee <- function(formula, id,mtime, corstr="independence", phi=NULL,da
   return(beta_hat)
 }
 fit_normal_gee(formula = distance~age,data = ort,id=Subject,mtime = age,corstr="unstructured")
-kk <- fit_normal_gee(formula = distance~age,data = ort,id=Subject,phi = 1)
+kk <- fit_normal_gee(formula = distance~age,data = ort,mtime = age,id=Subject,corstr="unstructured")
 

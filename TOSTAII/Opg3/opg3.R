@@ -15,6 +15,8 @@ unique(ort$age)
 lm(formula = distance~Sex,data = ort)
 unique(ort$Subject)
 
+ort1 <- ort[order(ort$Subject,ort$age),]
+
 fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=NULL){
   #data_temp <- data[order(id)]
   if(!is.null(phi)){
@@ -29,6 +31,8 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
   n_subs <- length(subjects)
   n_vars <- ncol(X)
   n_obs <- length(y)
+  n_times <- n_obs/n_subs
+  print(n_times)
   #print(subjects)
   if (is.null(w))
     w <- rep(1, length(y))
@@ -46,9 +50,11 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
     #print(pearsons_resid)
     rmatrix <- diag(1,4)
     #1/((n_subs-n_vars)*phi)
-    for(i in subjects){
-      individ_res <- pearsons_resid[subjects==i]
-      print(X[subjects==i])
+    #for(i in subjects){
+    for(i in 0:(n_subs-1)){
+      individ_res <- pearsons_resid[(1:n_times)+(i*n_times)]
+      #individ_res <- pearsons_resid[subjects==i]
+      #print(X[subjects==i,])
       corr <- individ_res%*%t(individ_res)
       #diag(corr) <- 0
       rmatrix <- rmatrix+corr
@@ -63,7 +69,7 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
     #return(rmatrix)
     rbig <- kronecker(diag(1,n_subs),rmatrix)
     mu_star <- X%*%beta_star
-    beta_hat <- beta_star-solve(t(X)%*%solve(rbig)%*%X)%*%t(X)%*%solve(rbig)%*%(y-mu_star)
+    beta_hat <- beta_star+solve(t(X)%*%solve(rbig)%*%X)%*%t(X)%*%solve(rbig)%*%(y-mu_star)
     if(sum(abs(beta_star-beta_hat)<conv.eps)==ncol(X)){break}
     beta_star <- beta_hat
     print(beta_hat)
