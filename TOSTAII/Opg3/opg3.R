@@ -1,28 +1,93 @@
-ct <- read.table("data/clottingTime.txt", header=T)
-ct
+data(Orthodont, package="nlme")
+ort <- Orthodont
+head(ort)
+levels(ort$Subject)
 library(ggplot2)
-source("multiplot.R")
+library(tidyverse)
+qplot(age, distance, group=Subject, data=ort, color=Subject) + geom_path() + facet_grid(~Sex)
 
-fit_gamma <- function(formula, data, link="inverse", phi=NULL, w=NULL){
+osum <- ort %>% group_by(Sex, age) %>% summarize(m=mean(distance), v=var(distance))
+qplot(m, v, data=osum)
+
+library(geepack)
+geeglm(formula = distance~age,data = ort,id=Subject,corstr="unstructured")
+unique(ort$age)
+lm(formula = distance~Sex,data = ort)
+unique(ort$Subject)
+
+fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=NULL){
+  #data_temp <- data[order(id)]
   if(!is.null(phi)){
     if((length(phi)>1|phi<0)[1]){
       stop("phi should be just one possitive number")
     }
   }
+  deparsed_id <- deparse(substitute(id))
   y <- model.response(model.frame(formula, data=data))
   X <- model.matrix(formula, data=data)
-  f <- Gamma(link)
-  g <- f$linkfun
-  g.inv <- f$linkinv
-  g.der <- Deriv::Deriv(g, "mu")
-  V <- f$variance
+  subjects <- unique(data[deparsed_id])
+  n_subs <- length(subjects)
+  n_vars <- ncol(X)
+  n_obs <- length(y)
+  #print(subjects)
   if (is.null(w))
     w <- rep(1, length(y))
   conv.eps <- 1e-12
   ## Get started; intitial value of z and beta
-  lm. <- lm.fit(x = X, y = g(y))
-  
+  lm. <- lm.fit(x = X, y = y)
   beta_star <- lm.$coefficients
+  print(beta_star)
+  k <- 0
+  repeat{
+    pearsons_resid <- (y-X%*%beta_star)/1#Variansen er sat til 1
+    #print(pearsons_resid)
+    phi <- t(pearsons_resid)%*%pearsons_resid/(n_obs-n_vars)
+    print(phi)
+    #print(pearsons_resid)
+    rmatrix <- diag(1,4)
+    #1/((n_subs-n_vars)*phi)
+    for(i in subjects){
+      individ_res <- pearsons_resid[subjects==i]
+      corr <- individ_res%*%t(individ_res)
+      #diag(corr) <- 0
+      rmatrix <- rmatrix+corr
+      #print(individ_res)
+      #print(corr)
+    }
+    rmatrix <- 1/((n_subs-n_vars)*phi[1,1])*rmatrix
+    diag(rmatrix) <- 1
+    #print(rmatrix)
+    #v_i <- phi*rmatrix
+    print(rmatrix)
+    #return(rmatrix)
+    rbig <- kronecker(diag(1,n_subs),rmatrix)
+    mu_star <- X%*%beta_star
+    beta_hat <- beta_star-solve(t(X)%*%rbig%*%X)%*%t(X)%*%solve(rbig)%*%(y-mu_star)
+    if(sum(abs(beta_star-beta_hat)<conv.eps)==ncol(X)){break}
+    beta_star <- beta_hat
+    print(beta_hat)
+    k <- k+1
+    print(k)
+    if(k>3){break}
+  }
+  
+}
+fit_normal_gee(formula = distance~age,data = ort,id=Subject,phi = 1)
+kk <- fit_normal_gee(formula = distance~age,data = ort,id=Subject,phi = 1)
+
+
+for (j in 1:nobsses) {
+  for (k in 1:nobsses) {
+    if(k!=j){
+      corr[i,k]<- individ_res[j]*individ_res[k]
+    }
+  }
+}
+    repeat{
+      pearson_resid <- (y-mu_hat)/sqrt(V(mu_hat)/w)
+      if(sum(abs(beta_star-beta_hat)<conv.eps)==ncol(X)){break}
+    }
+}
   
   ## Iterate until beta no longer changes
   repeat{
@@ -54,6 +119,8 @@ fit_gamma <- function(formula, data, link="inverse", phi=NULL, w=NULL){
   vcov <- phi_hat*solve(t(X)%*%solve(sigma)%*%X)
   ## Compute Pearson residuals
   pearson_resid <- (y-mu_hat)/sqrt(V(mu_hat)/w)
+  
+  
   out <- list( 
     coef = beta_hat,
     vcov = vcov,
@@ -91,14 +158,13 @@ fgc$coef
 ## OPG 4
 plot(fga$fit,fga$resid)
 plot(log2(ct$conc), 1/ct$lot1)
-lines(log2(ct$conc),1/fga$fit,col="red")
+lines(1/fga$fit,col="red")
 plot(fgb$fit,fgb$resid)
 plot(log2(ct$conc), log(ct$lot1))
-lines(log2(ct$conc),log(fgb$fit),col="red")
+lines(log(fgb$fit),col="red")
 plot(fgc$fit,fgc$resid)
 plot(log2(ct$conc), ct$lot1)
-lines(log2(ct$conc),fgb$fit,col="red")
-
+lines(fgb$fit,col="red")
 
 ##OPG 5
 
@@ -114,4 +180,3 @@ pchisq(wtest,lower.tail = FALSE,df = 3)
 
 wtest <- (fga$coef^2)/diag(fga$vcov)
 pchisq(wtest,lower.tail = FALSE,df = 2)
-
