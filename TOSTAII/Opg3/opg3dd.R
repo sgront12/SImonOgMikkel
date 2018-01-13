@@ -64,15 +64,17 @@ fit_normal_gee <- function(formula, id,mtime, corstr="independence", phi=NULL,da
   repeat{
     pearsons_resid <- (y_ordered-X_ordered%*%beta_star)/1#Variansen er sat til 1
     #print(pearsons_resid)
-    phi <- t(pearsons_resid)%*%pearsons_resid/(n_obs-n_vars)
+    phi <- (t(pearsons_resid)%*%pearsons_resid)/(n_obs-n_vars)
     print(phi)
     #print(pearsons_resid)
     rmatrix <- diag(0,n_times)
     #1/((n_subs-n_vars)*phi)
     for(i in 0:(n_subs-1)){
       individ_res <- pearsons_resid[(1:n_times)+(i*n_times)]
+      #print(X_ordered[(1:n_times)+(i*n_times),])
       #print(individ_res)
       corr <- individ_res%*%t(individ_res)
+      #corr <- cov2cor(corr)
       #diag(corr) <- 0
       rmatrix <- rmatrix+corr
       #print(rmatrix)
@@ -86,20 +88,21 @@ fit_normal_gee <- function(formula, id,mtime, corstr="independence", phi=NULL,da
     diag(rmatrix) <- 1
     
     #v_i <- phi*rmatrix
-    print(rmatrix)
+    #print(rmatrix)
     #return(rmatrix)
     rbig <- kronecker(diag(1,n_subs),rmatrix)
     #print(rbig)
     mu_star <- X_ordered%*%beta_star
-    beta_hat <- beta_star-solve(t(X_ordered)%*%rbig%*%X_ordered)%*%t(X_ordered)%*%solve(rbig)%*%(y_ordered-mu_star)
+    beta_hat <- beta_star+solve(t(X_ordered)%*%solve(rbig)%*%X_ordered)%*%t(X_ordered)%*%solve(rbig)%*%(y_ordered-mu_star)
     if(sum(abs(beta_star-beta_hat)<conv.eps)==ncol(X)){break}
     beta_star <- beta_hat
-    print(beta_hat)
+    #print(beta_hat)
     k <- k+1
     print(k)
-    if(k>3){break}
+    if(k>200){break}
   }
-  
+  print(rmatrix)
+  return(beta_hat)
 }
 fit_normal_gee(formula = distance~age,data = ort,id=Subject,mtime = age,corstr="unstructured")
 kk <- fit_normal_gee(formula = distance~age,data = ort,id=Subject,phi = 1)

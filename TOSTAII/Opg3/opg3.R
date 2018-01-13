@@ -48,11 +48,12 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
     #1/((n_subs-n_vars)*phi)
     for(i in subjects){
       individ_res <- pearsons_resid[subjects==i]
+      print(X[subjects==i])
       corr <- individ_res%*%t(individ_res)
       #diag(corr) <- 0
       rmatrix <- rmatrix+corr
       #print(individ_res)
-      print(corr-t(corr))
+      #print(corr-t(corr))
     }
     rmatrix <- 1/((n_subs-n_vars)*phi[1,1])*rmatrix
     diag(rmatrix) <- 1
@@ -62,13 +63,13 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
     #return(rmatrix)
     rbig <- kronecker(diag(1,n_subs),rmatrix)
     mu_star <- X%*%beta_star
-    beta_hat <- beta_star-solve(t(X)%*%rbig%*%X)%*%t(X)%*%solve(rbig)%*%(y-mu_star)
+    beta_hat <- beta_star-solve(t(X)%*%solve(rbig)%*%X)%*%t(X)%*%solve(rbig)%*%(y-mu_star)
     if(sum(abs(beta_star-beta_hat)<conv.eps)==ncol(X)){break}
     beta_star <- beta_hat
     print(beta_hat)
     k <- k+1
     print(k)
-    if(k>3){break}
+    if(k>40){break}
   }
   
 }
