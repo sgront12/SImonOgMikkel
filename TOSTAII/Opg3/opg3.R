@@ -52,7 +52,7 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
       #diag(corr) <- 0
       rmatrix <- rmatrix+corr
       #print(individ_res)
-      #print(corr)
+      print(corr-t(corr))
     }
     rmatrix <- 1/((n_subs-n_vars)*phi[1,1])*rmatrix
     diag(rmatrix) <- 1
