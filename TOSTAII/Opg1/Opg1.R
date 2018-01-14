@@ -2,7 +2,11 @@ ct <- read.table("data/clottingTime.txt", header=T)
 ct
 library(ggplot2)
 source("multiplot.R")
-
+qplot(ct$conc,ct$lot1)
+multiplot(qplot(log2(conc), lot1, data=ct),
+          qplot(log2(conc), log(lot1), data=ct),
+          qplot(log2(conc), 1/lot1, data=ct),
+          cols=3)
 fit_gamma <- function(formula, data, link="inverse", phi=NULL, w=NULL){
   if(!is.null(phi)){
     if((length(phi)>1|phi<0)[1]){
@@ -30,16 +34,12 @@ fit_gamma <- function(formula, data, link="inverse", phi=NULL, w=NULL){
     mu_star <- g.inv(eta_star)
     z_star <- g(mu_star)+g.der(mu_star)*(y-mu_star)
     v_star <- (g.der(mu_star)^2*V(mu_star))/w
-    #if(link=="identity"){H <- diag(rep(1,length(y)))}else{H <- diag(g.der(mu_star)[,1])}
     sigma <- diag(v_star[,1])
-    #sigma <- diag(v_star)
-    #r <- H%*%(y-mu_star)
-    #z=X%*%beta_star+r
     beta_hat <- solve(t(X)%*%solve(sigma)%*%X)%*%t(X)%*%solve(sigma)%*%z_star
-    if(sum(abs(beta_star-beta_hat)<conv.eps)==ncol(X)){break}
-    beta_star <- beta_hat
     # break the loop when beta stops changing between succesive
     # iterations.
+    if(sum(abs(beta_star-beta_hat)<conv.eps)==ncol(X)){break}
+    beta_star <- beta_hat
   }
   ## Compute mu and working weights v after final iteration
   mu_hat <- g.inv(X%*%beta_hat)
@@ -63,10 +63,7 @@ fit_gamma <- function(formula, data, link="inverse", phi=NULL, w=NULL){
     p    = p)
   out 
 }
-multiplot(qplot(log2(conc), 1/lot1, data=ct),
-          qplot(log2(conc), log(lot1), data=ct),
-          qplot(log2(conc), lot1, data=ct),
-          cols=3)
+
 
 ## OPG 3
 g1a <- glm(lot1 ~ log2(conc), family=Gamma("inverse"), data=ct)
@@ -74,8 +71,7 @@ fga <- fit_gamma(lot1 ~ log2(conc),link = "inverse",data=ct)
 g1a$coefficients-fga$coef
 summa1 <- summary(g1a)
 summa1$cov.scaled-fga$vcov
-resid(g1a,type = "pearson")
-fga$resid
+
 
 g1b <- glm(lot1 ~ log2(conc), family=Gamma("log"), data=ct)
 fgb <- fit_gamma(lot1 ~ log2(conc),link = "log",data=ct)

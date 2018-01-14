@@ -2,7 +2,7 @@
 therm <- read.csv("thermal.csv", header=T)
 
 
-fit_rational_nls <- function(y=1,x=2,p=2,q=2, data){
+fit_rational_nls <- function(y=1,x=2,p=1,q=1, data){
   data_temp <- cbind(data[1:(1+p+q),y],data[1:(1+p+q),x])
   colnames(data_temp) <- c("y","x")
   matrix_temp <- as.matrix(rep(1,(1+p+q)))
@@ -43,8 +43,8 @@ kk <- 1
 AIC <- rep(NA,25)
 BIC <- rep(NA,25)
 name_round <- rep(NA,25)
-for (k in 1:100) {
-  for (j in 1:100) {
+for (k in 1:20) {
+  for (j in 1:20) {
     name_round[kk] <- paste(k,j)
     #print(name_round[kk])
     try(fit2 <- fit_rational_nls(y="tec",x="temp",data=therm,p=k,q=j),silent = TRUE)
@@ -67,3 +67,4 @@ plot(therm,pch = 19,col="black")
 points(therm$temp,residuals(fit2)+therm$tec,col="green")
 points(therm$temp,residuals(fit3)+therm$tec,col="blue")
 points(therm$temp,residuals(fit4)+therm$tec,col="red")
+
