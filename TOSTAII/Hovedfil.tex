@@ -138,9 +138,62 @@ Nu ved vi altså, hvordan de udvidede vektorer og matricer ser ud for at omskriv
 Hvilket var, hvad vi skulle vise.
 
 \subsection*{2. Vis hvordan $\ell_Q(\beta_0,\bbeta)$ opnås fra \[\ell(\beta_0,\bbeta) = \frac{1}{n}\sum_{i=1}^{n}\left[y_i(\beta_0+\bX_i^\top\bbeta)-\log(1+\exp\{\beta_0+\bX_i^\top\bbeta\})\right].\]}
+Not gonna write this one. Not gonna happen.
+%\[\ell(\beta_0^\ast,\bbeta^\ast)+(\beta_0-\beta_0^\ast,\bbeta-\bbeta^\ast)\pdif{\bbeta}\ell(\beta_0^\ast,\bbeta^\ast)+\frac{1}{2}(\beta_0-\beta_0^\ast,\bbeta-\bbeta^\ast)\frac{\partial^2}{\partial\bbeta^\top\partial\bbeta}\ell(\beta_0^\ast,\bbeta^\ast)(\beta_0-\beta_0^\ast,\bbeta-\bbeta^\ast)^\top\]
+
+\subsection*{3. Udled opdateringsligningerne for $\beta_j$ baseret på $-\ell_Q+\lambda P_\alpha(\bbeta)$ for $j=1,\ldots,p$.}
+Først differentieres $\ell_Q = -\frac{1}{2n}\sum_{i=1}^{n}w_i^\ast(z_i^\ast-\beta_0-x_i^\top\bbeta)^2$ i forhold til $\beta_j$. Vi får ved kædereglen, at:
+\[\pdif{\beta_j}\ell_Q = -\frac{1}{2n}\sum_{i=1}^{n}-2x_{ij}w_i^\ast(z_i^\ast-\beta_0-x_i^\top\bbeta) = \frac{1}{n}\sum_{i=1}^{n}x_{ij}w_i^\ast(z_i^\ast-\beta_0-x_i^\top\bbeta).\]
+Da vi i sidste ende vil isoleres $\beta_j$ kan vi lige lave en sum udelukkende bestående af led, der indeholder $\beta_j$. Vi har:
+
+\[\frac{1}{n}\sum_{i=1}^{n}x_{ij}w_i^\ast(z_i^\ast-\beta_0-x_i^\top\bbeta) = \frac{1}{n}\sum_{i=1}^{n}x_{ij}w_i^\ast(z_i^\ast-\beta_0-\sum_{k\neq j}(x_{ik}\beta_j))-\frac{1}{n}\beta_j\sum_{i=1}^{n}x_{ij}^2w_i^\ast = a_j-\beta_jc_j\]
+
+Vi har desuden, at
+\begin{equation*}
+\partial|\beta_j| =
+\begin{cases}
+-1 & \beta_j < 0\\
+[-1,1] & \beta_j = 0\\
+1 & \beta_j > 0,
+\end{cases}       
+\end{equation*}
+hvormed
+\[\pdif{\beta_j}P_\alpha(\bbeta) = \pdif{\beta_j}\left(\sum_{i=1}^{p}(1-\alpha)\beta_i^2/2+\alpha|\beta_i|\right) = (1-\alpha)\beta_j+\alpha\partial|\beta_j|.\]
+Vi samler de forskellige differentialer:
+
+\[\pdif{\beta_j}-\ell_Q+\lambda P_\alpha(\bbeta) = -a_j+\beta_jc_j+\lambda((1-a)\beta_j+\alpha\partial|\beta_j|) = \beta_j(c_j+\lambda(1-\alpha))-a_j+\lambda\alpha\partial|\beta_j|=0.\]
+Vi isolerer $\beta_j$ og får:
+
+\begin{equation*}
+\widehat{\beta}_j = \frac{a_j-\lambda\alpha\partial|\beta_j|}{c_j+\lambda(1-\alpha)}
+\end{equation*}
+Måden, $c_j$ er defineret på, gør denne konstant positiv. Dette er $\lambda(1-\alpha)$ også. Dermed er nævneren altid positiv. Det vil sige, at det eneste, der kan ændre fortegnet på $\beta_j$ er tælleren. Vi har:
+\begin{equation*}
+\widehat{\beta}_j = \frac{a_j-\lambda\alpha\partial|\beta_j|}{c_j+\lambda(1-\alpha)} = \frac{1}{c_j+\lambda(1-\alpha)}\begin{cases}
+a_j+\lambda\alpha & a_j<-\lambda\alpha\\
+0 & -\lambda\alpha\leq a_j\leq \lambda\alpha \\
+a_j-\lambda & a_j > \lambda\alpha.
+\end{cases}
+\end{equation*}
+Hvis man har lyst, kan man skrive det som:
+\[\widehat{\beta}_j = \frac{\text{sign}(a_j)(|a_j|-\lambda\alpha)_+}{c_j+\lambda(1-\alpha)}.\]
 
 \secs
-Sørens del - se \texttt{R}-kode.
+Man kan estimere $\bbeta$ ved at løse følgende GEEs
+\[\psi = \sum_{i=1}^{K}\frac{\partial\bmu_i}{\partial\bbeta}^\top \Sigma^{-1}(\bY_i-\bmu_i(\bbeta)) = 0\]
+for
+\[\Sigma_i = \phi A_i^{1/2}R(\alpha)A_i^{1/2},\]
+hvor $A_i$ er en $n_i\times n_i$ diagonalmatrix med $V(\mu_{ij})$ på den $j$'te diagonalindgang og $R(\alpha)$ er korrelationsmatricen.
+
+
+
+\bigskip
+
+\noindent I opgave 1 betragtes følgende setup
+\[V(\mu)=1,~~g(\mu)=\mu,~~R(\alpha)=I,~~w_i = 1.\]
+Da $g(\mu)=X\bbeta$, får vi fra kravene, at $\mu = g(\mu) = X\bbeta$. Det er altså nu muligt at differentiere $\bmu$ i forhold til $\bbeta$:
+
+Se \texttt{R}-kode for resten.
 
 \secs
 \subsection*{1a. Vis, at $S(\bbeta)=\norm{\bX\bbeta-\by}_2^2$ kan blive dekomponeret, sådan at
@@ -192,4 +245,5 @@ Vi ganger med nævneren på begge sider og får:
   &  &  &  & \vdots & & & & \\
  1 & x_N & x_N^2 & \ldots & x_N^p & x_Ny & x_N^2y & \ldots & x_N^qy
  \end{bmatrix}\begin{bmatrix}\alpha\\\beta\end{bmatrix}.\]
+
 \end{document}
