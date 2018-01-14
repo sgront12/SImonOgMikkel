@@ -33,12 +33,6 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
   ## Get started; intitial value of z and beta
   lm. <- lm.fit(x = X, y = y)
   beta <- lm.$coefficients
-  
-  #Beviset for, at det er en lortefunktion, der blev brugt tidligere.
-  #v = c()
-  #for(i in 1:n_subs){
-  #  v <- c(v,as.vector(match(pearsons_resid[subjects==subjects[i]], pearsons_resid)))
-  #}
   if(corstr=="unstructured"){
       repeat{
       pearsons_resid <- (y-X%*%beta)/1#Variansen er sat til 1
@@ -69,7 +63,8 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
       cov_y[((n_subobs*i)+1):n_obs,i:(n_subobs*i)] <- 0
       cov_y[i:(n_subobs*i),((n_subobs*i)+1):n_obs] <- 0
     }
-    I_1 <- 1/phi^2*t(X)%*%rbig_inv%*%cov_y%*%rbig_inv%*%X
+    #1/phi^2*
+    I_1 <- t(X)%*%rbig_inv%*%cov_y%*%rbig_inv%*%X
     Sigma_e <- I_0%*%I_1%*%I_0
 
     return(list("coef" = beta_hat,
@@ -87,13 +82,14 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
     cov_y[((n_subobs*i)+1):n_obs,i:(n_subobs*i)] <- 0
     cov_y[i:(n_subobs*i),((n_subobs*i)+1):n_obs] <- 0
   }
-  I_1 <- 1/phi^2*t(X)%*%cov_y%*%X
+  #1/phi^2
+  I_1 <- t(X)%*%cov_y%*%X
   return(list("coef" = beta,
               "phi" = phi,
               "p" = length(beta),
               "rmatrix"=diag(1,n_subobs),
               "Sigma_m" = I_0,
-              "vcov" = I_0%*%I_1%*%I_0, #Sigma_e,
+              "vcov" = I_0%*%I_1%*%I_0,
               "fit" = X%*%beta,
               "resid" = y-X%*%beta))
   
