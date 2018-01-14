@@ -12,7 +12,7 @@ qplot(m, v, data=osum)
 library(geepack)
 geeglm(formula = distance~age,data = ort,id=Subject,corstr="unstructured")
 unique(ort$age)
-lm(formula = distance~Sex,data = ort)
+lm(formula = distance~age,data = ort)
 unique(ort$Subject)
 
 ort1 <- ort[order(ort$Subject,ort$age),]
@@ -61,7 +61,7 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
       #print(individ_res)
       #print(corr-t(corr))
     }
-    rmatrix <- 1/((n_subs-n_vars)*phi[1,1])*rmatrix
+    rmatrix <- (1/((n_subs-n_vars)*phi[1,1]))*rmatrix
     diag(rmatrix) <- 1
     #print(rmatrix)
     #v_i <- phi*rmatrix
@@ -75,11 +75,11 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
     print(beta_hat)
     k <- k+1
     print(k)
-    if(k>40){break}
+    if(k>100){break}
   }
   
 }
-fit_normal_gee(formula = distance~age,data = ort,id=Subject,phi = 1)
+fit_normal_gee(formula = distance~age*Sex,data = ort,id=Subject,phi = 1)
 kk <- fit_normal_gee(formula = distance~age,data = ort,id=Subject,phi = 1)
 
 
@@ -174,6 +174,13 @@ plot(log2(ct$conc), ct$lot1)
 lines(fgb$fit,col="red")
 
 ##OPG 5
+library(Matrix)
+diag(diag(1,4),matrix(0,nrow = 4,ncol = 4))
+a <- diag(1,4)
+b <- matrix(0,nrow = 4,ncol = 4)
+
+b[2,2] <- diag(1,2)
+
 
 g1d <- glm(lot1 ~ log2(conc)+I(log2(conc)^2), family=Gamma("inverse"), data=ct)
 fgd <- fit_gamma(lot1 ~ log2(conc)+I(log2(conc)^2),link = "inverse",data=ct)
