@@ -50,7 +50,7 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
       }
       rmatrix <- 1/((n_subs-n_vars)*phi)*rmatrix
       diag(rmatrix) <- 1
-      rbig_inv <- solve(kronecker(diag(1,n_subs),rmatrix))
+      rbig_inv <- solve(kronecker(diag(1,n_subs),rmatrix))/phi
     
       beta_hat <- beta+solve(t(X)%*%rbig_inv%*%X)%*%t(X)%*%rbig_inv%*%(y-X%*%beta)
       if(sum(abs(beta-beta_hat)<conv.eps)==ncol(X)){break}
@@ -82,7 +82,9 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
     cov_y[((n_subobs*i)+1):n_obs,i:(n_subobs*i)] <- 0
     cov_y[i:(n_subobs*i),((n_subobs*i)+1):n_obs] <- 0
   }
-  #1/phi^2
+  if(set_phi == FALSE){
+    phi <- drop(t((y-X%*%beta))%*%(y-X%*%beta)/(n_obs-n_vars))
+  }
   I_1 <- t(X)%*%cov_y%*%X
   return(list("coef" = beta,
               "phi" = phi,
@@ -95,7 +97,7 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
   
 }
 ### OPG 3
-fit1 <- fit_normal_gee(formula = distance~age+Sex,data = ort,id=Subject,phi = 1,corstr="Independent")
+fit1 <- fit_normal_gee(formula = distance~age+Sex,data = ort,id=Subject,corstr="Independent")
 fit3 <- fit_normal_gee(formula = distance~age+Sex,data = ort,id=Subject,corstr="unstructured")
 fit1$phi
 fit3$phi
