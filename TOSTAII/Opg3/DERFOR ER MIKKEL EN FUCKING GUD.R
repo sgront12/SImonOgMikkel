@@ -54,20 +54,26 @@ fit_normal_gee <- function(formula, id, corstr="independence", phi=NULL,data, w=
     diag(rmatrix) <- 1
     rbig_inv <- solve(kronecker(diag(1,n_subs),rmatrix))
     
-    mu <- X%*%beta
-    beta_hat <- beta+solve(t(X)%*%rbig_inv%*%X)%*%t(X)%*%rbig_inv%*%(y-mu)
+    beta_hat <- beta+solve(t(X)%*%rbig_inv%*%X)%*%t(X)%*%rbig_inv%*%(y-X%*%beta)
     if(sum(abs(beta-beta_hat)<conv.eps)==ncol(X)){break}
     beta <- beta_hat
   }
-  I_0 <- phi*solve(t(X)%*%X)
-  I_1 <- 1/phi^2*t(X)%*%(y-X%*%beta_hat)%*%t(y-X%*%beta_hat)%*%X
-  Sigma_e <- I_0%*%I_1%*%I_1
-  print(I_0)
-  print(Sigma_e)
-  print(phi)
-  print(beta)
-  print(rmatrix)
+  #Needs some fixing, those values are off the charts
+  I_0 <- solve(t(X)%*%rbig_inv%*%X)
+  I_1 <- 1/phi^2*t(X)%*%rbig_inv%*%(y-X%*%beta_hat)%*%t(y-X%*%beta_hat)%*%rbig_inv%*%X
+  Sigma_e <- I_0%*%I_1%*%I_0
+
+  return(list("coef" = beta_hat,
+              "phi" = phi,
+              "p" = length(beta_hat),
+              "rmatrix"=rmatrix,
+              "Sigma_m" = I_0,
+              "vcov" = Sigma_e,
+              "fit" = X%*%beta_hat,
+              "resid" = y-X%*%beta_hat))
 }
-fit_normal_gee(formula = distance~age+Sex,data = ort,id=Subject,phi = 1)
-fit <- geeglm(formula = distance~age+Sex,data = ort,id=Subject,corstr="unstructured")
-fit$geese$vbeta
+fit1 <- fit_normal_gee(formula = distance~age+Sex,data = ort,id=Subject,phi = 1)
+
+
+fit2 <- geeglm(formula = distance~age+Sex,data = ort,id=Subject,corstr="unstructured")
+fit2$geese$vbeta
